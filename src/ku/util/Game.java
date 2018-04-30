@@ -41,5 +41,12 @@ public class Game {
 	public boolean hasLadder() {
 		return board.hasLadderSquare(currentPlayerPosition());
 	}
+	
+	// print the type of the square
+	public void printTypes() {
+		for (Square square : board.getSquare()) {
+			System.out.println(square.getNumber() + ": " + square.getType());
+		}
+	}
 
 }
