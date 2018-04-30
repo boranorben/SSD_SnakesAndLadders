@@ -36,5 +36,10 @@ public class Game {
 	public void end() { ended = true; };
 	
 	public void switchPlayer() { currentPlayerIndex = (currentPlayerIndex+1) % players.length; };
+	
+	// check if the current player are on ladder square
+	public boolean hasLadder() {
+		return board.hasLadderSquare(currentPlayerPosition());
+	}
 
 }

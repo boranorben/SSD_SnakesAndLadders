@@ -10,6 +10,8 @@ public class Board {
 			squares[i] = new Square(i);
 		}
 		squares[squares.length-1].setGoal(true);
+		// add ladder square in square 1
+		squares[1] = new LadderSquare(1);
 	}
 	
 	public void addPiece(Piece piece, int pos) {
@@ -37,6 +39,10 @@ public class Board {
 	
 	public boolean pieceIsAtGoal(Piece piece) {
 		return squares[getPeicePosition(piece)].isGoal();
+	}
+	
+	public boolean hasLadderSquare(int pos) {
+		return squares[pos].getType() == "SQUARE" ? false : true;
 	}
 
 }

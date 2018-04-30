@@ -8,6 +8,8 @@ public class Square {
 	private int number;
 	private boolean goal;
 	
+	private String type = "SQUARE";
+	
 	public Square(int number) {
 		this.pieces = new ArrayList<Piece>();
 		this.number = number;
@@ -36,6 +38,10 @@ public class Square {
 	
 	public int getNumber() {
 		return this.number;
+	}
+	
+	public String getType() {
+		return this.type;
 	}
 
 }

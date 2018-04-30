@@ -16,6 +16,8 @@ public class ConsloeUI {
 			System.out.println("Dice face = " + face);
 			game.currentPlayerMovePiece(face);
 			System.out.println("Position: " + game.currentPlayerPosition());
+			// check if the current player are on ladder sq
+			System.out.println("This is a Ladder?: " + game.hasLadder());
 			if (game.currentPlayersWins()) {
 				System.out.println(game.currentPlayerName() + "Win!");
 				game.end();
