@@ -9,11 +9,13 @@ public class Square {
 	private boolean goal;
 	
 	protected String type = "SQUARE";
+	protected int toNumber;
 	
 	public Square(int number) {
 		this.pieces = new ArrayList<Piece>();
 		this.number = number;
 		this.goal = false;
+		this.toNumber = number;
 	}
 
 	public void addPiece(Piece piece) {
@@ -44,5 +46,8 @@ public class Square {
 		return this.type;
 	}
 	
-
+	public int getToNumber() {
+		return this.toNumber;
+	}
+	
 }
