@@ -47,15 +47,14 @@ public class Board {
 	}
 	
 	public void addLadderSquare() {
-		squares[1] = new LadderSquare(1, 14);
-		squares[5] = new LadderSquare(5, 29);
-		squares[10] = new LadderSquare(10, 22);
-		squares[24] = new LadderSquare(24, 31);
-		squares[39] = new LadderSquare(39, 77);
-		squares[51] = new LadderSquare(51, 60);
-		squares[58] = new LadderSquare(58, 76);
-		squares[75] = new LadderSquare(75, 86);
-		squares[82] = new LadderSquare(82, 93);
+		squares[4] = new LadderSquare(4, 10);
+		squares[9] = new LadderSquare(9, 22);
+		squares[20] = new LadderSquare(20, 18);
+		squares[28] = new LadderSquare(28, 56);
+		squares[40] = new LadderSquare(40, 19);
+		squares[51] = new LadderSquare(51, 16);
+		squares[63] = new LadderSquare(63, 18);
+		squares[71] = new LadderSquare(71, 20);
 	}
 	
 	// method for checking the square's type

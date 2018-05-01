@@ -20,9 +20,9 @@ public class ConsloeUI {
 			System.out.println("This is a Ladder?: " + game.hasLadder());
 			// if the the current player found the ladder, move the piece to that the end of the ladder
 			if (game.hasLadder()) {
-				System.out.println("From position " + game.currentPlayerPosition() + " to ");
+				System.out.print("From position " + game.currentPlayerPosition() + " to ");
 				game.currentPlayerFoundLadder();
-				System.out.print("Position: " + game.currentPlayerPosition() + "\n");
+				System.out.println("Position: " + game.currentPlayerPosition());
 			}
 			if (game.currentPlayersWins()) {
 				System.out.println(game.currentPlayerName() + "Win!");

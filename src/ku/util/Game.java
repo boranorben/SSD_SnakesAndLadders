@@ -45,13 +45,13 @@ public class Game {
 	// print the type of the square
 	public void printTypes() {
 		for (Square square : board.getSquare()) {
-			System.out.println(square.getNumber() + ": " + square.getType() + " to " + square.getToNumber());
+			System.out.println(square.getNumber() + ": " + square.getType() + " to " + square.getSteps());
 		}
 	}
 	
 	// when current player found ladder
 	public void currentPlayerFoundLadder() {
-		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getToNumber() - currentPlayerPosition());
+		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
 
 }

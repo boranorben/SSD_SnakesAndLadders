@@ -2,10 +2,10 @@ package ku.util;
 
 public class LadderSquare extends Square {
 
-	public LadderSquare(int from, int to) {
+	public LadderSquare(int from, int steps) {
 		super(from);
 		this.type = "Ladder";
-		this.toNumber = to;
+		this.steps = steps;
 	}
 	
 	@Override
@@ -14,7 +14,7 @@ public class LadderSquare extends Square {
 	}
 	
 	@Override
-	public int getToNumber() {
-		return this.toNumber;
+	public int getSteps() {
+		return this.steps;
 	}
 }
