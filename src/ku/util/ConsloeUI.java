@@ -18,10 +18,11 @@ public class ConsloeUI {
 			System.out.println("Position: " + game.currentPlayerPosition());
 			// check if the current player are on ladder square
 			System.out.println("This is a Ladder?: " + game.hasLadder());
+			System.out.println("This is a Snake?: " + game.hasSnake());
 			// if the the current player found the ladder, move the piece to that the end of the ladder
-			if (game.hasLadder()) {
+			if (game.hasLadder() || game.hasSnake()) {
 				System.out.print("From position " + game.currentPlayerPosition() + " to ");
-				game.currentPlayerFoundLadder();
+				game.currentPlayerFound();
 				System.out.println("Position: " + game.currentPlayerPosition());
 			}
 			if (game.currentPlayersWins()) {
@@ -31,7 +32,7 @@ public class ConsloeUI {
 				game.switchPlayer();
 			}
 		}
-//		game.printTypes();
+		game.printTypes();
 	}
 	
 	public static void main(String[] args) {
