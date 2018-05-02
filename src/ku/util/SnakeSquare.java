@@ -1,10 +1,10 @@
 package ku.util;
 
-public class LadderSquare extends Square {
-		
-	public LadderSquare(int from, int steps) {
-		super(from);
-		this.type = "Ladder";
+public class SnakeSquare extends Square {
+
+	public SnakeSquare(int number, int steps) {
+		super(number);
+		this.type = "Snake";
 		this.steps = steps;
 	}
 	
@@ -17,4 +17,5 @@ public class LadderSquare extends Square {
 	public int getSteps() {
 		return this.steps;
 	}
+
 }

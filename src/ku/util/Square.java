@@ -8,12 +8,14 @@ public class Square {
 	private int number;
 	private boolean goal;
 	
-	protected String type = "SQUARE";
+	protected String type = "Square";
+	protected int steps;
 	
 	public Square(int number) {
 		this.pieces = new ArrayList<Piece>();
 		this.number = number;
 		this.goal = false;
+		this.steps = 0;
 	}
 
 	public void addPiece(Piece piece) {
@@ -44,5 +46,8 @@ public class Square {
 		return this.type;
 	}
 	
-
+	public int getSteps() {
+		return this.steps;
+	}
+	
 }
