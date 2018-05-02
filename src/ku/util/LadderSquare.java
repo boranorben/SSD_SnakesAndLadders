@@ -2,8 +2,8 @@ package ku.util;
 
 public class LadderSquare extends Square {
 
-	public LadderSquare(int number) {
-		super(number);
+	public LadderSquare(int number, int finalBox) {
+		super(number);	
 		this.type = "Ladder";
 	}
 	
