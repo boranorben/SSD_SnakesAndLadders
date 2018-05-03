@@ -34,6 +34,12 @@ public class Game {
 			board.createSpecialSquares("Snake", snake[0], snake[1]);
 		}
 	}
+	
+	public void isFreeze(int block) {
+		if(board.getSquare()[block].getType() == "Freeze") {
+			players[currentPlayerIndex].setFreeze(true);
+		}
+	}
 
 	public boolean isEnded() {
 		return ended;
