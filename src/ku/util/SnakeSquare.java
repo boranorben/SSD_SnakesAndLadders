@@ -7,15 +7,4 @@ public class SnakeSquare extends Square {
 		this.type = "Snake";
 		this.steps = steps;
 	}
-	
-	@Override
-	public String getType() {
-		return this.type;
-	}
-	
-	@Override
-	public int getSteps() {
-		return this.steps;
-	}
-
 }

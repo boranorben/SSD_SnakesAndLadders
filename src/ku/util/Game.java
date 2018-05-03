@@ -14,9 +14,25 @@ public class Game {
 		this.die = new Die();
 		this.board = new Board();
 		this.ended = false;
+		
+		//Create all special tiles
+		this.createSpecial();
 
 		board.addPiece(players[0].getPiece(), 0);
 		board.addPiece(players[1].getPiece(), 0);
+	}
+	
+	public void createSpecial() {
+		int ladders[][] = {{4, 10}, {9, 22}, {20, 18}, {28, 56}, {40, 19}, {51, 16}, {63, 18}, {71, 20}};
+		int snakes[][] = {{17, -10}, {54, -20}, {62, -43}, {64, -4}, {87, -60}, {93, -20}, {95, -20}, {99, -21}};
+		
+		for(int[] ladder: ladders) {
+			board.createSpecialSquares("Ladder", ladder[0], ladder[1]);
+		}
+		
+		for(int[] snake: snakes) {
+			board.createSpecialSquares("Snake", snake[0], snake[1]);
+		}
 	}
 
 	public boolean isEnded() {

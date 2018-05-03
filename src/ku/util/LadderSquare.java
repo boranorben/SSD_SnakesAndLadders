@@ -7,14 +7,4 @@ public class LadderSquare extends Square {
 		this.type = "Ladder";
 		this.steps = steps;
 	}
-	
-	@Override
-	public String getType() {
-		return this.type;
-	}
-	
-	@Override
-	public int getSteps() {
-		return this.steps;
-	}
 }

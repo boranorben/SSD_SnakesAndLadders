@@ -10,10 +10,6 @@ public class Board {
 			squares[i] = new Square(i);
 		}
 		squares[squares.length-1].setGoal(true);
-		// add snake and ladder square here
-		addSnakeSquare();
-		addLadderSquare();
-
 	}
 	
 	public void addPiece(Piece piece, int pos) {
@@ -44,38 +40,40 @@ public class Board {
 	}
 	
 	public boolean hasLadderSquare(int pos) {
-		return squares[pos].getType() == "Ladder" ? true : false;
+		return squares[pos].getType().equals("Ladder") ? true : false;
 	}
 	
 	public boolean hasSnakeSquare(int pos) {
-		return squares[pos].getType() == "Snake" ? true : false;
-	}
-	
-	public void addLadderSquare() {
-		squares[4] = new LadderSquare(4, 10);
-		squares[9] = new LadderSquare(9, 22);
-		squares[20] = new LadderSquare(20, 18);
-		squares[28] = new LadderSquare(28, 56);
-		squares[40] = new LadderSquare(40, 19);
-		squares[51] = new LadderSquare(51, 16);
-		squares[63] = new LadderSquare(63, 18);
-		squares[71] = new LadderSquare(71, 20);
-	}
-	
-	public void addSnakeSquare() {
-		squares[17] = new SnakeSquare(17, -10);
-		squares[54] = new SnakeSquare(54, -20);
-		squares[62] = new SnakeSquare(62, -43);
-		squares[64] = new SnakeSquare(64, -4);
-		squares[87] = new SnakeSquare(87, -60);
-		squares[93] = new SnakeSquare(93, -20);
-		squares[95] = new SnakeSquare(95, -20);
-		squares[99] = new SnakeSquare(99, -21);
+		return squares[pos].getType().equals("Snake") ? true : false;
 	}
 	
 	// method for checking the square's type
 	public Square[] getSquare() {
 		return this.squares;
+	}
+	
+	public void createSpecialSquares(String type, int block) {
+		squares[block] = new FreezeSquare(block);
+	}
+	
+	public void createSpecialSquares(String type, int block, int steps) {
+		switch(type) {
+			case "Ladder":
+				squares[block] = new LadderSquare(block, steps);
+				break;
+				
+			case "Snake":
+				squares[block] = new SnakeSquare(block, steps);
+				break;
+				
+			case "Backward":
+				squares[block] = new BackwardSquare(block, steps);
+				break;
+
+			default:
+				break;
+		}
+		
 	}
 
 }
