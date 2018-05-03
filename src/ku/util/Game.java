@@ -66,9 +66,14 @@ public class Game {
 	public void end() {
 		ended = true;
 	};
-
+	
 	public void switchPlayer() {
-		currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+		int tmp = (currentPlayerIndex + 1) % players.length;
+		if(players[tmp].getFreeze() == true) {
+			players[tmp].setFreeze(false);
+		} else {
+			currentPlayerIndex = tmp;
+		}
 	};
 
 	// check if the current player is on snake square

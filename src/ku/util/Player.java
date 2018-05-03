@@ -3,10 +3,12 @@ package ku.util;
 public class Player {
 	private String name;
 	private Piece piece;
+	private boolean freeze;
 	
 	public Player(String name) {
 		this.name = name;
 		this.piece = new Piece();
+		this.freeze = false;
 	}
 	
 	public int roll(Die die) {
@@ -24,5 +26,13 @@ public class Player {
 	
 	public Piece getPiece() {
 		return this.piece;
+	}
+	
+	public boolean getFreeze() {
+		return this.freeze;
+	}
+	
+	public void setFreeze(boolean freeze) {
+		this.freeze = freeze;
 	}
 }
