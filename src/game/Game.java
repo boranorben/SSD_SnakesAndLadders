@@ -13,6 +13,7 @@ public class Game {
 	private int currentPlayerIndex;
 	private boolean ended;
 	private List<Replay> replay = new ArrayList<Replay>();	
+	private List<Replay> tmp;
 
 	public Game() {
 		this.die = new Die();
@@ -111,8 +112,27 @@ public class Game {
 		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
 	
-	public List<Replay> getReplay() {
-		return this.replay;
+	public void showReplay() {
+		setTmp(this.replay);
+		doReplay(this.tmp);
+	}
+	
+	public void setTmp(List<Replay> tmp) {
+		this.tmp = tmp;
+	}
+	
+	public void doReplay(List<Replay> tmp) {
+		if(tmp.size() == 0) {
+			return;
+		}
+		tmp.get(0).getPlayer().movePiece(board, tmp.get(0).getSteps());
+		if(tmp.size() == 1) {
+			return;
+		} else {
+			tmp = tmp.subList(1, tmp.size());
+			doReplay(tmp);
+		}
+		
 	}
 	
 	public void initPlayers(int num){
