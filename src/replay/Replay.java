@@ -1,4 +1,6 @@
-package ku.util;
+package replay;
+
+import game.Player;
 
 public class Replay {
 	private Player player;

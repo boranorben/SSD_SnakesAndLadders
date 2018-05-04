@@ -1,4 +1,4 @@
-package ku.util;
+package game;
 
 import java.util.Random;
 

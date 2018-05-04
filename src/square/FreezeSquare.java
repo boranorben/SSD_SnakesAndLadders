@@ -1,4 +1,4 @@
-package ku.util;
+package square;
 
 public class FreezeSquare extends Square{
 

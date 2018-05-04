@@ -1,6 +1,8 @@
-package ku.util;
+package ui;
 
 import java.util.Scanner;
+
+import game.Game;
 
 public class ConsloeUI {
 	private Scanner scanner = new Scanner(System.in);

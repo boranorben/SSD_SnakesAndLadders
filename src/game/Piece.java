@@ -1,4 +1,4 @@
-package ku.util;
+package game;
 
 public class Piece {
 

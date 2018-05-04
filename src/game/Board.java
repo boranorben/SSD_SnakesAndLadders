@@ -1,4 +1,10 @@
-package ku.util;
+package game;
+
+import square.BackwardSquare;
+import square.FreezeSquare;
+import square.LadderSquare;
+import square.SnakeSquare;
+import square.Square;
 
 public class Board {
 	public static final int SIZE = 100;

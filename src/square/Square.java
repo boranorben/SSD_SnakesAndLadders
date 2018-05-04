@@ -1,7 +1,9 @@
-package ku.util;
+package square;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import game.Piece;
 
 public class Square {
 	private List<Piece> pieces;

@@ -1,7 +1,10 @@
-package ku.util;
+package game;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import replay.Replay;
+import square.Square;
 
 public class Game {
 	private Player[] players;
