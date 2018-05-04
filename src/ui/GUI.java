@@ -91,7 +91,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				homeFrame.setVisible(false);
 				gameFrame.setVisible(true);	
-				
+				game.initPlayers(2);
 			}
 		};
 
@@ -100,7 +100,9 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				homeFrame.setVisible(false);
-				gameFrame.setVisible(true);				
+				gameFrame.setVisible(true);	
+				game.initPlayers(3);
+
 			}
 		};
 
@@ -109,7 +111,8 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				homeFrame.setVisible(false);
-				gameFrame.setVisible(true);				
+				gameFrame.setVisible(true);	
+				game.initPlayers(4);
 			}
 		};
 		player2_Button.addActionListener(player2Listener);

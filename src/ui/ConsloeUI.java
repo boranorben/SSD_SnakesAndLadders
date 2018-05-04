@@ -8,6 +8,7 @@ public class ConsloeUI {
 	private Scanner scanner = new Scanner(System.in);
 	
 	public void start(Game game) {
+		game.initPlayers(2);
 		while(!game.isEnded()) {
 			System.out.println("-------------");
 			System.out.println(game.currentPlayer().getName() + "'s turn");

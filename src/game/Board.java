@@ -56,9 +56,8 @@ public class Board {
 		case "Backward":
 			return squares[pos].getType().equals("Backward") ? true : false;
 		default:
-			break;
+			return false;
 		}
-		return false;
 	}
 	
 	

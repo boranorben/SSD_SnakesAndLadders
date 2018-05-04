@@ -15,18 +15,10 @@ public class Game {
 	private List<Replay> replay = new ArrayList<Replay>();	
 
 	public Game() {
-		this.players = new Player[2];
-		this.players[0] = new Player("P1");
-		this.players[1] = new Player("P2");
 		this.die = new Die();
 		this.board = new Board();
 		this.ended = false;
-		
-		//Create all special tiles
 		this.createSpecial();
-
-		board.addPiece(players[0].getPiece(), 0);
-		board.addPiece(players[1].getPiece(), 0);
 	}
 	
 	public void createSpecial() {
@@ -121,5 +113,13 @@ public class Game {
 	
 	public List<Replay> getReplay() {
 		return this.replay;
+	}
+	
+	public void initPlayers(int num){
+		this.players = new Player[num];
+		for( int i = 0 ; i < num ; i++ ) {
+			this.players[i] = new Player("P" + (i+1));
+			board.addPiece(players[i].getPiece(), 0);
+		}
 	}
 }
