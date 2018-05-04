@@ -15,7 +15,7 @@ public class Replay {
 		return this.steps;
 	}
 	
-	public String getPlayerName() {
-		return this.player.getName();
+	public Player getPlayer() {
+		return this.player;
 	}
 }
