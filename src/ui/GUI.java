@@ -18,7 +18,8 @@ public class GUI {
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel rollResult;
+	private JLabel rollResult, boardPic, coverPic, titlePic, status, nextPlayer, currentPlayer;
+	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -29,17 +30,21 @@ public class GUI {
 	}
 
 	public void initComponent() {
-		JLabel boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
-		JLabel coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic2.jpg")));
-		JButton player2_Button = new JButton(), player3_Button = new JButton(), player4_Button = new JButton();
-		JButton die = new JButton();
-		JLabel titlePic = new JLabel(new ImageIcon(getClass().getResource("./../images/titlePic.png")));
-		JButton restartButton = new JButton(), replayButton = new JButton();
-		JLabel status = new JLabel("Status");
-		JLabel nextPlayer = new JLabel("Next player");
-		JLabel currentPlayer = new JLabel("Current player");
-		rollResult = new JLabel("You Get: 0");
-
+		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
+		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
+		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic2.jpg")));
+		titlePic = new JLabel(new ImageIcon(getClass().getResource("./../images/titlePic.png")));
+		status = new JLabel("Status");
+		nextPlayer = new JLabel("Next player");
+		currentPlayer = new JLabel("Current player");
+		
+		player2_Button = new JButton();
+		player3_Button = new JButton();
+		player4_Button = new JButton();
+		die = new JButton();
+		restartButton = new JButton();
+		replayButton = new JButton();
+		
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
 		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
@@ -110,7 +115,30 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				rollResult.setText("You Get: " + game.currentPlayerRollDice());
+				switch (game.currentPlayerRollDice()) {
+				case 1:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
+					break;
+				case 2:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
+					break;
+				case 3:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
+					break;
+				case 4:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
+					break;
+				case 5:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
+					break;
+				case 6:
+					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
+					break;
+				default:
+					break;
+				}
+				// check
+				System.out.println(game.currentPlayer().getName() + ": " + game.currentPlayerRollDice());
 			}
 		});
 
