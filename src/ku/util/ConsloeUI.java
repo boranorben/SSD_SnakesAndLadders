@@ -15,6 +15,7 @@ public class ConsloeUI {
 			int face = game.currentPlayerRollDice();
 			System.out.println("Dice face = " + face);
 			game.currentPlayerMovePiece(face);
+			game.setFreeze(game.currentPlayerPosition());
 			System.out.println("Position: " + game.currentPlayerPosition());
 			// check if the current player are on ladder square
 			System.out.println("This is a Ladder?: " + game.hasLadder());

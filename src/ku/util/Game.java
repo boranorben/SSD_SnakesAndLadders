@@ -1,11 +1,15 @@
 package ku.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
 	private Player[] players;
 	private Die die;
 	private Board board;
 	private int currentPlayerIndex;
 	private boolean ended;
+	private List<Replay> replay = new ArrayList<Replay>();	
 
 	public Game() {
 		this.players = new Player[2];
@@ -35,7 +39,7 @@ public class Game {
 		}
 	}
 	
-	public void isFreeze(int block) {
+	public void setFreeze(int block) {
 		if(board.getSquare()[block].getType() == "Freeze") {
 			players[currentPlayerIndex].setFreeze(true);
 		}
@@ -58,6 +62,7 @@ public class Game {
 	}
 
 	public void currentPlayerMovePiece(int steps) {
+		replay.add(new Replay(currentPlayer(), steps));
 		currentPlayer().movePiece(board, steps);
 	}
 
@@ -103,5 +108,8 @@ public class Game {
 	public void currentPlayerFound() {
 		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
-
+	
+	public List<Replay> getReplay() {
+		return this.replay;
+	}
 }
