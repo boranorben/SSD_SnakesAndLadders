@@ -17,7 +17,7 @@ public class Board {
 	}
 	
 	public void movePiece(Piece piece, int steps) {
-		int pos = getPeicePosition(piece);
+		int pos = getPiecePosition(piece);
 		this.squares[pos].removePiece(piece);
 		int newPos = pos + steps;
 		if (newPos >= squares.length) {
@@ -26,7 +26,7 @@ public class Board {
 		addPiece(piece, newPos);
 	}
 	
-	public int getPeicePosition(Piece piece) {
+	public int getPiecePosition(Piece piece) {
 		for (Square s : squares) {
 			if (s.hasPiece(piece)) {
 				return s.getNumber();
@@ -36,7 +36,7 @@ public class Board {
 	}
 	
 	public boolean pieceIsAtGoal(Piece piece) {
-		return squares[getPeicePosition(piece)].isGoal();
+		return squares[getPiecePosition(piece)].isGoal();
 	}
 
 }

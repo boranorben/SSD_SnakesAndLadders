@@ -23,7 +23,7 @@ public class Game {
 	
 	public Player currentPlayer() { return players[currentPlayerIndex]; }
 	
-	public int currentPlayerPosition() { return board.getPeicePosition(currentPlayer().getPiece()); }
+	public int currentPlayerPosition() { return board.getPiecePosition(currentPlayer().getPiece()); }
 	
 	public int currentPlayerRollDice() { return currentPlayer().roll(die); }
 	
