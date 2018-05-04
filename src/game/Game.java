@@ -94,17 +94,19 @@ public class Game {
 			currentPlayerIndex = tmp;
 		}
 	};
+	
+	public boolean hasSnake() {
+		return board.hasSpecialSquare("Snake", currentPlayerPosition());
+	}
 
-	// check if the current player is on snake square
 	public boolean hasLadder() {
-		return board.hasLadderSquare(currentPlayerPosition());
+		return board.hasSpecialSquare("Ladder", currentPlayerPosition());
 	}
 	
-	// check if the current player is on snake square
-	public boolean hasSnake() {
-		return board.hasSnakeSquare(currentPlayerPosition());
+	public boolean hasFreeze() {
+		return board.hasSpecialSquare("Freeze", currentPlayerPosition());
 	}
-
+	
 	// print the type of the square
 	public void printTypes() {
 		for (Square square : board.getSquare()) {

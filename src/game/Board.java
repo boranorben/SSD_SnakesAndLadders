@@ -45,13 +45,22 @@ public class Board {
 		return squares[getPeicePosition(piece)].isGoal();
 	}
 	
-	public boolean hasLadderSquare(int pos) {
-		return squares[pos].getType().equals("Ladder") ? true : false;
+	public boolean hasSpecialSquare(String type, int pos) {
+		switch (type) {
+		case "Snake":
+			return squares[pos].getType().equals("Snake") ? true : false;
+		case "Ladder":
+			return squares[pos].getType().equals("Ladder") ? true : false;
+		case "Freeze":
+			return squares[pos].getType().equals("Freeze") ? true : false;
+		case "Backward":
+			return squares[pos].getType().equals("Backward") ? true : false;
+		default:
+			break;
+		}
+		return false;
 	}
 	
-	public boolean hasSnakeSquare(int pos) {
-		return squares[pos].getType().equals("Snake") ? true : false;
-	}
 	
 	// method for checking the square's type
 	public Square[] getSquare() {
