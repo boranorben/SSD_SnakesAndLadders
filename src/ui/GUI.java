@@ -23,7 +23,7 @@ public class GUI {
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer;
+	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1, player2, player3, player4;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private GridBagConstraints gbc;
 
@@ -46,6 +46,10 @@ public class GUI {
 		status = new JLabel("Status");
 		nextPlayer = new JLabel("Next player");
 		currentPlayer = new JLabel("Current player");
+		player1 = new JLabel(new ImageIcon(getClass().getResource("./../images/player1.png")));
+		player2 = new JLabel(new ImageIcon(getClass().getResource("./../images/player2.png")));
+		player3 = new JLabel(new ImageIcon(getClass().getResource("./../images/player3.png")));
+		player4 = new JLabel(new ImageIcon(getClass().getResource("./../images/player4.png")));
 		
 		setFont(status);
 		setFont(nextPlayer);
@@ -133,6 +137,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				if (game.isEnded()) {
 					JOptionPane.showMessageDialog(null, "Game's alrealdy ended!");
+					die.setEnabled(false);
 				} else {
 					int diceFace = game.currentPlayerRollDice();
 					switch (diceFace) {

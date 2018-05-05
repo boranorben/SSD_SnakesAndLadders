@@ -175,7 +175,7 @@ public class Game {
 	public void currentPlayerFound(int backSteps) {
 		currentPlayer().movePiece(board, -backSteps);
 	}
-
+	
 	public void showReplay() {
 		setTmp(this.replay);
 		doReplay(this.tmp);
