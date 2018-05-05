@@ -79,8 +79,12 @@ public class Game {
 	}
 
 	public void currentPlayerMovePiece(int steps) {
-		replay.add(new Replay(currentPlayer(), steps));
 		currentPlayer().movePiece(board, steps);
+		Square currentSquareType = board.getSquare()[currentPlayerPosition()];
+		if(currentSquareType.getType().equals("Snake") || currentSquareType.getType().equals("Ladder")) {
+			currentPlayer().movePiece(board, currentSquareType.getSteps());
+		}
+		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
 	}
 
 	public boolean currentPlayersWins() {
