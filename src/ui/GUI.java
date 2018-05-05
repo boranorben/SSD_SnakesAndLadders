@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import game.Game;
@@ -34,6 +35,7 @@ public class GUI {
 		homeFrame.setResizable(false);
 		gameFrame.setResizable(false);
 		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initComponent();
 	}
 
@@ -129,30 +131,34 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int diceFace = game.currentPlayerRollDice();
-				switch (diceFace) {
-				case 1:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
-					break;
-				case 2:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
-					break;
-				case 3:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
-					break;
-				case 4:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
-					break;
-				case 5:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
-					break;
-				case 6:
-					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
-					break;
-				default:
-					break;
+				if (game.isEnded()) {
+					JOptionPane.showMessageDialog(null, "Game's alrealdy ended!");
+				} else {
+					int diceFace = game.currentPlayerRollDice();
+					switch (diceFace) {
+					case 1:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
+						break;
+					case 2:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
+						break;
+					case 3:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
+						break;
+					case 4:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
+						break;
+					case 5:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
+						break;
+					case 6:
+						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
+						break;
+					default:
+						break;
+					}
+					game.gameLogic(diceFace);
 				}
-				game.gameLogic(diceFace);
 			}
 		});
 
