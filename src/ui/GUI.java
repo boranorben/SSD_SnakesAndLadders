@@ -1,10 +1,14 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -40,6 +44,10 @@ public class GUI {
 		status = new JLabel("Status");
 		nextPlayer = new JLabel("Next player");
 		currentPlayer = new JLabel("Current player");
+		
+		setFont(status);
+		setFont(nextPlayer);
+		setFont(currentPlayer);
 		
 		player2_Button = new JButton();
 		player3_Button = new JButton();
@@ -77,18 +85,21 @@ public class GUI {
 		panelTitle.add(titlePic);
 
 		JPanel panelController = new JPanel();
+		panelController.add(restartButton);
+		panelController.add(replayButton);
 		panelController.add(currentPlayer);
 		panelController.add(nextPlayer);
 		panelController.add(status);
-		panelController.add(rollResult);
-		panelController.add(die);
-		panelController.add(restartButton);
-		panelController.add(replayButton);
 		panelController.setLayout(new BoxLayout(panelController, BoxLayout.PAGE_AXIS));
-
-		gameFrame.add(panelBoard, BorderLayout.CENTER);
+		
+		JPanel panelRoll = new JPanel();
+		panelRoll.add(die);
+		panelRoll.add(rollResult);
+		
+		gameFrame.add(panelBoard, BorderLayout.EAST);
 		gameFrame.add(panelTitle, BorderLayout.NORTH);
 		gameFrame.add(panelController, BorderLayout.WEST);
+		gameFrame.add(panelRoll, BorderLayout.SOUTH);
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -184,6 +195,18 @@ public class GUI {
 		homeFrame.setVisible(false);
 		gameFrame.setVisible(true);
 		game.initPlayers(numPlayers);
+	}
+	
+	public void setFont(JLabel label) {
+		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+			Font sizedFont = font.deriveFont(20f);
+			label.setFont(font);
+			label.setFont(sizedFont);
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
