@@ -47,7 +47,7 @@ public class GUI {
 		
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
-		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
+//		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
@@ -115,7 +115,8 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				switch (game.currentPlayerRollDice()) {
+				int diceFace = game.currentPlayerRollDice();
+				switch (diceFace) {
 				case 1:
 					rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
 					break;
@@ -137,8 +138,10 @@ public class GUI {
 				default:
 					break;
 				}
+				game.currentPlayerMovePiece(diceFace);
 				// check
-				System.out.println(game.currentPlayer().getName() + ": " + game.currentPlayerRollDice());
+				System.out.println(game.currentPlayer().getName() + ": " + diceFace);
+				game.switchPlayer();
 			}
 		});
 

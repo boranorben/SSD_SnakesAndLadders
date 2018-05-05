@@ -13,7 +13,7 @@ public class Game {
 	private int currentPlayerIndex;
 	private boolean ended;
 
-	private List<Replay> replay = new ArrayList<Replay>();	
+	private List<Replay> replay = new ArrayList<Replay>();
 	private List<Replay> tmp;
 
 	public Game() {
@@ -37,6 +37,7 @@ public class Game {
 		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -43 }, { 64, -4 }, { 87, -60 }, { 93, -20 }, { 95, -20 },
 				{ 99, -21 } };
 		int freezes[] = { 26, 50, 59, 78, 85 };
+		int backwards[] = { 19, 29, 35, 61, 96 };
 
 		for (int[] ladder : ladders) {
 			board.createSpecialSquares("Ladder", ladder[0], ladder[1]);
@@ -48,6 +49,10 @@ public class Game {
 
 		for (int freeze : freezes) {
 			board.createSpecialSquares("Freeze", freeze);
+		}
+		
+		for (int backward : backwards) {
+			board.createSpecialSquares("Backward", backward);
 		}
 	}
 
@@ -98,6 +103,11 @@ public class Game {
 			currentPlayerIndex = tmp;
 		}
 	};
+	
+	public String getSquareType() {
+		return board.getSquare()[currentPlayerPosition()].getType() == "Square" ?
+				"Square" : board.getSquare()[currentPlayerPosition()].getType();
+	}
 
 	public boolean hasSnake() {
 		return board.hasSpecialSquare("Snake", currentPlayerPosition());
@@ -109,6 +119,10 @@ public class Game {
 
 	public boolean hasFreeze() {
 		return board.hasSpecialSquare("Freeze", currentPlayerPosition());
+	}
+	
+	public boolean hasBackward() {
+		return board.hasSpecialSquare("Backward", currentPlayerPosition());
 	}
 
 	// print the type of the square
@@ -124,21 +138,26 @@ public class Game {
 		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
 	
+	public void currentPlayerFound(int backSteps) {
+		currentPlayer().movePiece(board, -backSteps);
+	}
+
 	public void showReplay() {
 		setTmp(this.replay);
 		doReplay(this.tmp);
 	}
-	
+
 	public void setTmp(List<Replay> tmp) {
 		this.tmp = tmp;
 	}
-	
+
 	public void doReplay(List<Replay> tmp) {
-		if(tmp.size() == 0) {
+		if (tmp.size() == 0) {
 			return;
 		}
 		tmp.get(0).getPlayer().movePiece(board, tmp.get(0).getSteps());
-		if(tmp.size() == 1) {
+		if (tmp.size() == 1) {
+			tmp = new ArrayList<Replay>();
 			return;
 		} else {
 			tmp = tmp.subList(1, tmp.size());

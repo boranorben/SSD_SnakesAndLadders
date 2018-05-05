@@ -20,10 +20,8 @@ public class ConsloeUI {
 			game.currentPlayerMovePiece(face);
 			game.setFreeze(game.currentPlayerPosition());
 			System.out.println("Position: " + game.currentPlayerPosition());
-			// check if the current player are on ladder square
-			System.out.println("This is a Ladder?: " + game.hasLadder());
-			System.out.println("This is a Snake?: " + game.hasSnake());
-			System.out.println("This is a freeze?: " + game.hasFreeze());
+			// check if the current player are on special square
+			System.out.println("Square type: " + game.getSquareType());
 			// if the the current player found the ladder, move the piece to that the end of the ladder
 			if (game.hasLadder() || game.hasSnake()) {
 				System.out.print("From position " + game.currentPlayerPosition() + " to ");
@@ -31,6 +29,15 @@ public class ConsloeUI {
 				System.out.println("Position: " + game.currentPlayerPosition());
 			}
 			// freeze is not completed
+			if (game.hasBackward()) {
+				System.out.println("Current player found Backward! need to roll agian!");
+				scanner.nextLine();
+				int backFace = game.currentPlayerRollDice();
+				System.out.println("Dice face = " + -backFace);
+				System.out.print("From position " + game.currentPlayerPosition() + " to ");
+				game.currentPlayerFound(backFace);
+				System.out.println("Position: " + game.currentPlayerPosition());
+			}
 			if (game.currentPlayersWins()) {
 				System.out.println(game.currentPlayerName() + "Win!");
 				game.end();
