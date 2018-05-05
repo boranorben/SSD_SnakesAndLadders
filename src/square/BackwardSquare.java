@@ -2,9 +2,8 @@ package square;
 
 public class BackwardSquare extends Square{
 
-	public BackwardSquare(int number, int steps) {
+	public BackwardSquare(int number) {
 		super(number);
 		this.type = "Backward";
-		this.steps = -steps;
 	}
 }
