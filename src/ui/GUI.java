@@ -152,10 +152,7 @@ public class GUI {
 				default:
 					break;
 				}
-				game.currentPlayerMovePiece(diceFace);
-				// check
-				System.out.println(game.currentPlayer().getName() + ": " + diceFace);
-				game.switchPlayer();
+				game.gameLogic(diceFace);
 			}
 		});
 

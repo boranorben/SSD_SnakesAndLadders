@@ -32,10 +32,10 @@ public class Game {
 	}
 
 	public void createSpecial() {
-		int ladders[][] = { { 4, 10 }, { 9, 22 }, { 20, 18 }, { 28, 56 }, { 40, 19 }, { 51, 16 }, { 63, 18 },
-				{ 71, 20 } };
-		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -43 }, { 64, -4 }, { 87, -60 }, { 93, -20 }, { 95, -20 },
-				{ 99, -21 } };
+		int ladders[][] = { {1, 37}, { 4, 10 }, { 9, 22 }, {21, 21}, { 28, 56 }, { 51, 16 }, { 72, 19 },
+				{ 80, 19 } };
+		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -44 }, { 64, -4 }, { 87, -61 }, { 92, -19 }, { 95, -20 },
+				{ 98, -19 } };
 		int freezes[] = { 26, 50, 59, 78, 85 };
 		int backwards[] = { 19, 29, 35, 61, 96 };
 
@@ -55,9 +55,40 @@ public class Game {
 			board.createSpecialSquares("Backward", backward);
 		}
 	}
+	
+	public void gameLogic(int steps) {
+		System.out.println("--------------------------------");
+		if (!currentPlayer().getFreeze()) {
+			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
+			System.out.println("Dice faces: " + steps);
+			currentPlayerMovePiece(steps);
+			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
+			if (getSquareType() != "Square") {
+				if (hasSnake() || hasLadder()) {
+					System.out.println(currentPlayerName() + " found " + getSquareType());
+					System.out.print(currentPlayerName() + " go to ");
+					currentPlayerFound();
+					System.out.println(currentPlayerPosition());
+				} else if (hasFreeze()) {
+					System.out.println(currentPlayerName() + " Freeze!");
+					setFreeze();
+				} else if (hasBackward()) {
+					
+				}
+			}
+		} else {
+			System.out.println(currentPlayerName() + "'s still Frozen");
+		}
+		if (currentPlayersWins()) {
+			System.out.println(currentPlayerName() + "'s win!");
+			end();
+		} else {
+			switchPlayer();
+		}
+	}
 
-	public void setFreeze(int block) {
-		if (board.getSquare()[block].getType() == "Freeze") {
+	public void setFreeze() {
+		if (hasFreeze()) {
 			players[currentPlayerIndex].setFreeze(true);
 		}
 	}
@@ -133,7 +164,6 @@ public class Game {
 		}
 	}
 
-	// when current player found special squares
 	public void currentPlayerFound() {
 		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
