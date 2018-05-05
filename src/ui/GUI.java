@@ -1,6 +1,6 @@
 package ui;
 
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GridBagConstraints;
@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,13 +22,15 @@ public class GUI {
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel rollResult, boardPic, coverPic, titlePic, status, nextPlayer, currentPlayer;
+	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
+	private GridBagConstraints gbc;
 
 	public GUI(Game game) {
 		this.game = game;
 		homeFrame = new JFrame("Snakes and Ladders Game");
 		gameFrame = new JFrame("Snakes and Ladders Game");
+		gameFrame.setSize(730, 730);
 		homeFrame.setResizable(false);
 		gameFrame.setResizable(false);
 		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,7 +41,6 @@ public class GUI {
 		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
-		titlePic = new JLabel(new ImageIcon(getClass().getResource("./../images/titlePic.png")));
 		status = new JLabel("Status");
 		nextPlayer = new JLabel("Next player");
 		currentPlayer = new JLabel("Current player");
@@ -62,6 +62,9 @@ public class GUI {
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
+		
+		gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
 
 		setTransparentBackground(player2_Button);
 		setTransparentBackground(player3_Button);
@@ -72,8 +75,6 @@ public class GUI {
 		
 		homeFrame.setContentPane(coverPic);
 		homeFrame.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
         homeFrame.add(player2_Button, gbc);
         homeFrame.add(player3_Button, gbc);
         homeFrame.add(player4_Button, gbc);
@@ -81,25 +82,24 @@ public class GUI {
 		JPanel panelBoard = new JPanel();
 		panelBoard.add(boardPic);
 
-		JPanel panelTitle = new JPanel();
-		panelTitle.add(titlePic);
-
 		JPanel panelController = new JPanel();
+		panelController.setLayout(new GridBagLayout());
 		panelController.add(restartButton);
 		panelController.add(replayButton);
-		panelController.add(currentPlayer);
-		panelController.add(nextPlayer);
-		panelController.add(status);
-		panelController.setLayout(new BoxLayout(panelController, BoxLayout.PAGE_AXIS));
+		panelController.add(die);
+		panelController.add(rollResult);
 		
-		JPanel panelRoll = new JPanel();
-		panelRoll.add(die);
-		panelRoll.add(rollResult);
+		JPanel panelStatus = new JPanel();
+		panelStatus.add(currentPlayer);
+		panelStatus.add(nextPlayer);
+		panelStatus.add(status);
 		
-		gameFrame.add(panelBoard, BorderLayout.EAST);
-		gameFrame.add(panelTitle, BorderLayout.NORTH);
-		gameFrame.add(panelController, BorderLayout.WEST);
-		gameFrame.add(panelRoll, BorderLayout.SOUTH);
+		homeFrame.pack();
+		
+		gameFrame.setLayout(new FlowLayout());
+		gameFrame.add(panelController);
+		gameFrame.add(panelStatus);
+		gameFrame.add(panelBoard);
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -176,8 +176,6 @@ public class GUI {
 			}
 		});
 
-		homeFrame.pack();
-		gameFrame.pack();
 		gameFrame.setVisible(false);
 	}
 	
