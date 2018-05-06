@@ -21,6 +21,11 @@ public class Board {
 	public void addPiece(Piece piece, int pos) {
 		squares[pos].addPiece(piece);
 	}
+	
+	public void restartPiece(Piece piece) {
+		this.squares[getPeicePosition(piece)].removePiece(piece);
+		addPiece(piece, 0);
+	}
 
 	public void movePiece(Piece piece, int steps) {
 		int pos = getPeicePosition(piece);
@@ -29,6 +34,7 @@ public class Board {
 		if (newPos >= squares.length) {
 			newPos = squares.length - 1;
 		}
+		System.out.println(newPos);
 		addPiece(piece, newPos);
 	}
 

@@ -177,6 +177,9 @@ public class Game {
 	}
 	
 	public void showReplay() {
+		for(Player player : players) {
+			board.restartPiece(player.getPiece());
+		}
 		setTmp(this.replay);
 		doReplay(this.tmp);
 	}
@@ -196,6 +199,12 @@ public class Game {
 		} else {
 			tmp = tmp.subList(1, tmp.size());
 			doReplay(tmp);
+		}
+	}
+	
+	public void restartGame() {
+		for(Player player : players) {
+			board.restartPiece(player.getPiece());
 		}
 	}
 
