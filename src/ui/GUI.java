@@ -99,13 +99,15 @@ public class GUI {
 		panelBoard.add(boardPic);
 		boardPic.setLayout(null);
 		boardPic.add(player1_Pin);
-		player1_Pin.setBounds(50, 50, 50, 50);
+		//จริงๆ x_initialPos ต้องไปอยู่ด้านนอกboard แต่อันนี้แปะไว้ก่อน
+		int x_initialPos = 0, y_initialPos = 450;
+		player1_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
 		boardPic.add(player2_Pin);
-		player2_Pin.setBounds(50, 50, 50, 50);
+		player2_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
 		boardPic.add(player3_Pin);
-		player3_Pin.setBounds(50, 50, 50, 50);
+		player3_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
 		boardPic.add(player4_Pin);
-		player4_Pin.setBounds(50, 50, 50, 50);
+		player4_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
 
 		JPanel panelController = new JPanel();
 		panelController.setLayout(new GridBagLayout());
