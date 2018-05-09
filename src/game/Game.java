@@ -32,7 +32,7 @@ public class Game {
 	}
 
 	public void createSpecial() {
-		int ladders[][] = { {1, 37}, { 4, 10 }, { 9, 22 }, {21, 21}, { 28, 56 }, { 51, 16 }, { 72, 19 },
+		int ladders[][] = { { 1, 37 }, { 4, 10 }, { 9, 22 }, { 21, 21 }, { 28, 56 }, { 51, 16 }, { 72, 19 },
 				{ 80, 19 } };
 		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -44 }, { 64, -4 }, { 87, -61 }, { 92, -19 }, { 95, -20 },
 				{ 98, -19 } };
@@ -50,12 +50,12 @@ public class Game {
 		for (int freeze : freezes) {
 			board.createSpecialSquares("Freeze", freeze);
 		}
-		
+
 		for (int backward : backwards) {
 			board.createSpecialSquares("Backward", backward);
 		}
 	}
-	
+
 	public void gameLogic(int steps) {
 		System.out.println("--------------------------------");
 		if (!currentPlayer().getFreeze()) {
@@ -72,8 +72,6 @@ public class Game {
 				} else if (hasFreeze()) {
 					System.out.println(currentPlayerName() + " Freeze!");
 					setFreeze();
-				} else if (hasBackward()) {
-					
 				}
 			}
 		} else {
@@ -83,7 +81,9 @@ public class Game {
 			System.out.println(currentPlayerName() + "'s win!");
 			end();
 		} else {
-			switchPlayer();
+			if (!hasBackward()) {
+				switchPlayer();
+			}
 		}
 	}
 
@@ -112,7 +112,7 @@ public class Game {
 	public void currentPlayerMovePiece(int steps) {
 		currentPlayer().movePiece(board, steps);
 		Square currentSquareType = board.getSquare()[currentPlayerPosition()];
-		if(currentSquareType.getType().equals("Snake") || currentSquareType.getType().equals("Ladder")) {
+		if (currentSquareType.getType().equals("Snake") || currentSquareType.getType().equals("Ladder")) {
 			currentPlayer().movePiece(board, currentSquareType.getSteps());
 		}
 		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
@@ -138,10 +138,10 @@ public class Game {
 			currentPlayerIndex = tmp;
 		}
 	};
-	
+
 	public String getSquareType() {
-		return board.getSquare()[currentPlayerPosition()].getType() == "Square" ?
-				"Square" : board.getSquare()[currentPlayerPosition()].getType();
+		return board.getSquare()[currentPlayerPosition()].getType() == "Square" ? "Square"
+				: board.getSquare()[currentPlayerPosition()].getType();
 	}
 
 	public boolean hasSnake() {
@@ -155,7 +155,7 @@ public class Game {
 	public boolean hasFreeze() {
 		return board.hasSpecialSquare("Freeze", currentPlayerPosition());
 	}
-	
+
 	public boolean hasBackward() {
 		return board.hasSpecialSquare("Backward", currentPlayerPosition());
 	}
@@ -171,12 +171,15 @@ public class Game {
 	public void currentPlayerFound() {
 		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
 	}
-	
+
 	public void currentPlayerFound(int backSteps) {
 		currentPlayer().movePiece(board, -backSteps);
 	}
-	
+
 	public void showReplay() {
+		for (Player player : players) {
+			board.restartPiece(player.getPiece());
+		}
 		setTmp(this.replay);
 		doReplay(this.tmp);
 	}
@@ -196,6 +199,12 @@ public class Game {
 		} else {
 			tmp = tmp.subList(1, tmp.size());
 			doReplay(tmp);
+		}
+	}
+
+	public void restartGame() {
+		for (Player player : players) {
+			board.restartPiece(player.getPiece());
 		}
 	}
 

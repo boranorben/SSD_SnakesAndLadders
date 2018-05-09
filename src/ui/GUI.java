@@ -191,7 +191,7 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				game.restartGame();
 			}
 		});
 
