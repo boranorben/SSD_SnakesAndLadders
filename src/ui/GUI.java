@@ -10,12 +10,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import game.Game;
 
@@ -23,7 +27,7 @@ public class GUI {
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1, player2, player3, player4;
+	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private GridBagConstraints gbc;
 
@@ -46,31 +50,31 @@ public class GUI {
 		status = new JLabel("Status");
 		nextPlayer = new JLabel("Next player");
 		currentPlayer = new JLabel("Current player");
-		player1 = new JLabel(new ImageIcon(getClass().getResource("./../images/player1.png")));
-		player2 = new JLabel(new ImageIcon(getClass().getResource("./../images/player2.png")));
-		player3 = new JLabel(new ImageIcon(getClass().getResource("./../images/player3.png")));
-		player4 = new JLabel(new ImageIcon(getClass().getResource("./../images/player4.png")));
-		
+		player1_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player1.png")));
+		player2_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player2.png")));
+		player3_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player3.png")));
+		player4_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player4.png")));
+
 		setFont(status);
 		setFont(nextPlayer);
 		setFont(currentPlayer);
-		
+
 		player2_Button = new JButton();
 		player3_Button = new JButton();
 		player4_Button = new JButton();
 		die = new JButton();
 		restartButton = new JButton();
 		replayButton = new JButton();
-		
+
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
 		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
-		
+
 		gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
 		setTransparentBackground(player2_Button);
 		setTransparentBackground(player3_Button);
@@ -78,15 +82,30 @@ public class GUI {
 		setTransparentBackground(die);
 		setTransparentBackground(restartButton);
 		setTransparentBackground(replayButton);
-		
+
 		homeFrame.setContentPane(coverPic);
 		homeFrame.setLayout(new GridBagLayout());
-        homeFrame.add(player2_Button, gbc);
-        homeFrame.add(player3_Button, gbc);
-        homeFrame.add(player4_Button, gbc);
+		homeFrame.add(player2_Button, gbc);
+		homeFrame.add(player3_Button, gbc);
+		homeFrame.add(player4_Button, gbc);
+
+		JPanel panelPlayer = new JPanel();
+		panelPlayer.add(player1_Pin);
+		panelPlayer.add(player2_Pin);
+		panelPlayer.add(player3_Pin);
+		panelPlayer.add(player4_Pin);
 		
 		JPanel panelBoard = new JPanel();
 		panelBoard.add(boardPic);
+		boardPic.setLayout(null);
+		boardPic.add(player1_Pin);
+		player1_Pin.setBounds(50, 50, 50, 50);
+		boardPic.add(player2_Pin);
+		player2_Pin.setBounds(50, 50, 50, 50);
+		boardPic.add(player3_Pin);
+		player3_Pin.setBounds(50, 50, 50, 50);
+		boardPic.add(player4_Pin);
+		player4_Pin.setBounds(50, 50, 50, 50);
 
 		JPanel panelController = new JPanel();
 		panelController.setLayout(new GridBagLayout());
@@ -94,14 +113,14 @@ public class GUI {
 		panelController.add(replayButton);
 		panelController.add(die);
 		panelController.add(rollResult);
-		
+
 		JPanel panelStatus = new JPanel();
 		panelStatus.add(currentPlayer);
 		panelStatus.add(nextPlayer);
 		panelStatus.add(status);
 		
 		homeFrame.pack();
-		
+
 		gameFrame.setLayout(new FlowLayout());
 		gameFrame.add(panelController);
 		gameFrame.add(panelStatus);
@@ -164,6 +183,7 @@ public class GUI {
 					}
 					game.gameLogic(diceFace);
 				}
+
 			}
 		});
 
@@ -171,7 +191,6 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -186,7 +205,7 @@ public class GUI {
 
 		gameFrame.setVisible(false);
 	}
-	
+
 	public void setVisible() {
 		homeFrame.setVisible(true);
 	}
@@ -202,7 +221,7 @@ public class GUI {
 		gameFrame.setVisible(true);
 		game.initPlayers(numPlayers);
 	}
-	
+
 	public void setFont(JLabel label) {
 		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
 		try {
