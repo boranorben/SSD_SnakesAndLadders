@@ -133,6 +133,8 @@ public class GUI implements Observer{
 		
 		gameFrame.pack();
 		homeFrame.pack();
+		
+		updateCurrentPlayer();
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -234,7 +236,7 @@ public class GUI implements Observer{
 		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			Font sizedFont = font.deriveFont(10f);
+			Font sizedFont = font.deriveFont(12f);
 			label.setFont(font);
 			label.setFont(sizedFont);
 		} catch (FontFormatException | IOException e) {
@@ -263,25 +265,50 @@ public class GUI implements Observer{
 	}
 	
 	public void updateCurrentPlayer() {
-		switch (game.currentPlayer().getName()) {
-		case "Player1":
+		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-			break;
-		case "Player2":
-			currentPlayer.setIcon(player2_icon);
-			currentPlayer.setText("Current Player: Player 2");
-			break;
-		case "Player3":
-			currentPlayer.setIcon(player3_icon);
-			currentPlayer.setText("Current Player: Player 3");
-			break;
-		case "Player4":
-			currentPlayer.setIcon(player4_icon);
-			currentPlayer.setText("Current Player: Player 4");
-			break;
-		default:
-			break;
+		} else  {
+			switch (game.getArrayPlayer().length) {
+			case 2:
+				if (game.currentPlayerName().equals("Player1")) {
+					currentPlayer.setIcon(player2_icon);
+					currentPlayer.setText("Current Player: Player 2");
+				} else {
+					currentPlayer.setIcon(player1_icon);
+					currentPlayer.setText("Current Player: Player 1");
+				}
+				break;
+			case 3:
+				if (game.currentPlayerName().equals("Player1")) {
+					currentPlayer.setIcon(player2_icon);
+					currentPlayer.setText("Current Player: Player 2");
+				} else if (game.currentPlayerName().equals("Player2")) {
+					currentPlayer.setIcon(player3_icon);
+					currentPlayer.setText("Current Player: Player 3");
+				} else {
+					currentPlayer.setIcon(player1_icon);
+					currentPlayer.setText("Current Player: Player 1");
+				}
+				break;
+			case 4:
+				if (game.currentPlayerName().equals("Player1")) {
+					currentPlayer.setIcon(player2_icon);
+					currentPlayer.setText("Current Player: Player 2");
+				} else if (game.currentPlayerName().equals("Player2")) {
+					currentPlayer.setIcon(player3_icon);
+					currentPlayer.setText("Current Player: Player 3");
+				} else if (game.currentPlayerName().equals("Player3")) {
+					currentPlayer.setIcon(player4_icon);
+					currentPlayer.setText("Current Player: Player 4");
+				} else {
+					currentPlayer.setIcon(player1_icon);
+					currentPlayer.setText("Current Player: Player 1");
+				}
+				break;
+			default:
+				break;
+			}
 		}
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
