@@ -23,14 +23,16 @@ import javax.swing.JPanel;
 import game.Game;
 import game.Player;
 
-public class GUI implements Observer{
+public class GUI implements Observer {
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
+	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
+			player4_Pin;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private int diceFace = 0;
+	private int y = 450, x = 0;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -51,12 +53,12 @@ public class GUI implements Observer{
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
 		status = new JLabel("Status");
 		currentPlayer = new JLabel("Current player");
-		
+
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
 		player2_icon = new ImageIcon(getClass().getResource("./../images/player2.png"));
 		player3_icon = new ImageIcon(getClass().getResource("./../images/player3.png"));
 		player4_icon = new ImageIcon(getClass().getResource("./../images/player4.png"));
-		
+
 		player1_Pin = new JLabel(player1_icon);
 		player2_Pin = new JLabel(player2_icon);
 		player3_Pin = new JLabel(player3_icon);
@@ -74,7 +76,8 @@ public class GUI implements Observer{
 
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
-//		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
+		// player4_Button.setIcon(new
+		// ImageIcon(getClass().getResource("./../images/4Player.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
@@ -115,25 +118,25 @@ public class GUI implements Observer{
 		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
 		statusPanel.add(currentPlayer);
 		statusPanel.add(status);
-		
+
 		JPanel ManagerPanel = new JPanel();
 		ManagerPanel.setLayout(new BoxLayout(ManagerPanel, BoxLayout.Y_AXIS));
 		ManagerPanel.add(restartButton);
 		ManagerPanel.add(replayButton);
-		
+
 		JPanel controllerPanel = new JPanel();
 		controllerPanel.add(ManagerPanel);
 		controllerPanel.add(die);
 		controllerPanel.add(rollResult);
 		controllerPanel.add(statusPanel);
-		
+
 		gameFrame.add(title, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
-		
+
 		gameFrame.pack();
 		homeFrame.pack();
-		
+
 		updateCurrentPlayer();
 
 		player2_Button.addActionListener(new ActionListener() {
@@ -243,27 +246,35 @@ public class GUI implements Observer{
 			e.printStackTrace();
 		}
 	}
-	
-	public Player changePlayerType(JLabel player){
-		if(player == player1_Pin) return game.getArrayPlayer()[0];
-		else if(player == player2_Pin) return game.getArrayPlayer()[1];
-		else if(player == player3_Pin) return game.getArrayPlayer()[2];
-		else if(player == player4_Pin) return game.getArrayPlayer()[3];
-		return null;
-	}
-	
-	public JLabel findPlayerName(String name){
-		if(name.equals("Player1")) return player1_Pin;
-		else if(name.equals("Player2")) return player2_Pin;
-		else if(name.equals("Player3")) return player3_Pin;
-		else if(name.equals("Player4")) return player4_Pin;
+
+	public Player changePlayerType(JLabel player) {
+		if (player == player1_Pin)
+			return game.getArrayPlayer()[0];
+		else if (player == player2_Pin)
+			return game.getArrayPlayer()[1];
+		else if (player == player3_Pin)
+			return game.getArrayPlayer()[2];
+		else if (player == player4_Pin)
+			return game.getArrayPlayer()[3];
 		return null;
 	}
 
-	public void movePlayer(JLabel player, int x, int y){
+	public JLabel findPlayerName(String name) {
+		if (name.equals("Player1"))
+			return player1_Pin;
+		else if (name.equals("Player2"))
+			return player2_Pin;
+		else if (name.equals("Player3"))
+			return player3_Pin;
+		else if (name.equals("Player4"))
+			return player4_Pin;
+		return null;
+	}
+
+	public void movePlayer(JLabel player, int x, int y) {
 		player.setBounds(x, y, 50, 50);
 	}
-	
+
 	public void updateCurrentPlayer() {
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
@@ -309,9 +320,9 @@ public class GUI implements Observer{
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
 	}
-	
+
 	public void updateStatus() {
-		if (game.currentPlayersWins()) {	
+		if (game.currentPlayersWins()) {
 			status.setText(game.currentPlayerName() + "Wins!");
 			switch (game.currentPlayer().getName()) {
 			case "Player1":
@@ -333,32 +344,32 @@ public class GUI implements Observer{
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		move(game.getInitialPosition(), game.getSteps());
 		updateCurrentPlayer();
 	}
-	
+
 	public void move(int position, int steps) {
-		int movePosition = position * 50;
-		for(int i = 0; i < steps; i++) {
-			if(position % 10 == 0 && position != 0) {
-				movePlayer(findPlayerName(game.currentPlayerName()), movePosition, 400);
+		JLabel currentLabel = findPlayerName(game.currentPlayerName());
+		for (int i = 0; i < steps; i++) {
+			if (position % 10 == 0 && position != 0) {
+				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
 				game.switchPlayerPieceFace();
 			} else {
-				movePlayer(findPlayerName(game.currentPlayerName()), movePosition , 450);		
-				if(game.getPlayerPieceFace() == "right") {
-					movePosition += 50;
-				} else if(game.getPlayerPieceFace() == "left"){
-					movePosition -= 50;
+				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY());
+				if (game.getPlayerPieceFace() == "right") {
+					currentLabel.setLocation(currentLabel.getX()+50, currentLabel.getY());
+				} else if (game.getPlayerPieceFace() == "left") {
+					currentLabel.setLocation(currentLabel.getX()-50, currentLabel.getY());
 				}
 			}
 			position++;
 		}
 	}
-	
-	public int calculatePosition(){
+
+	public int calculatePosition() {
 		return (game.currentPlayerPosition() * 50) - 50;
 	}
 
