@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import game.Game;
+import game.Player;
 
 public class GUI {
 
@@ -94,20 +95,22 @@ public class GUI {
 		panelPlayer.add(player2_Pin);
 		panelPlayer.add(player3_Pin);
 		panelPlayer.add(player4_Pin);
-		
+
 		JPanel panelBoard = new JPanel();
 		panelBoard.add(boardPic);
 		boardPic.setLayout(null);
 		boardPic.add(player1_Pin);
 		//จริงๆ x_initialPos ต้องไปอยู่ด้านนอกboard แต่อันนี้แปะไว้ก่อน
 		int x_initialPos = 0, y_initialPos = 450;
-		player1_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
+
+		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
+		boardPic.add(player1_Pin);
+		initPlayerPos(player2_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player2_Pin);
-		player2_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
+		initPlayerPos(player3_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player3_Pin);
-		player3_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
+		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player4_Pin);
-		player4_Pin.setBounds(x_initialPos, y_initialPos, 50, 50);
 
 		JPanel panelController = new JPanel();
 		panelController.setLayout(new GridBagLayout());
@@ -120,7 +123,7 @@ public class GUI {
 		panelStatus.add(currentPlayer);
 		panelStatus.add(nextPlayer);
 		panelStatus.add(status);
-		
+
 		homeFrame.pack();
 
 		gameFrame.setLayout(new FlowLayout());
@@ -234,6 +237,18 @@ public class GUI {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Player changePlayerType(JLabel player){
+		if(player == player1_Pin) return game.getArrayPlayer()[0];
+		else if(player == player2_Pin) return game.getArrayPlayer()[1];
+		else if(player == player3_Pin) return game.getArrayPlayer()[2];
+		else if(player == player4_Pin) return game.getArrayPlayer()[3];
+		return null;
+	}
+
+	public void initPlayerPos(JLabel player, int x, int y){
+		player.setBounds(x, y, 50, 50);
 	}
 
 	public static void main(String[] args) {

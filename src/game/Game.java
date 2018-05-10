@@ -207,5 +207,9 @@ public class Game {
 			board.restartPiece(player.getPiece());
 		}
 	}
+	
+	public Player[] getArrayPlayer(){
+		return players;
+	}
 
 }
