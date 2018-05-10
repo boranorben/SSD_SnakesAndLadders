@@ -260,7 +260,7 @@ public class GUI implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
+		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);	
 		currentPlayer.setText("        " + game.currentPlayerName());
 	}
 
