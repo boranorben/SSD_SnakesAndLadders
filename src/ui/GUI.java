@@ -268,42 +268,34 @@ public class GUI implements Observer{
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-		} else  {
+		} else {
+			currentPlayer.setText("Current Player: " + game.nextPlayerName());
 			switch (game.getArrayPlayer().length) {
 			case 2:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			case 3:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else if (game.currentPlayerName().equals("Player2")) {
 					currentPlayer.setIcon(player3_icon);
-					currentPlayer.setText("Current Player: Player 3");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			case 4:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else if (game.currentPlayerName().equals("Player2")) {
 					currentPlayer.setIcon(player3_icon);
-					currentPlayer.setText("Current Player: Player 3");
 				} else if (game.currentPlayerName().equals("Player3")) {
 					currentPlayer.setIcon(player4_icon);
-					currentPlayer.setText("Current Player: Player 4");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			default:
@@ -313,6 +305,7 @@ public class GUI implements Observer{
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
 	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
