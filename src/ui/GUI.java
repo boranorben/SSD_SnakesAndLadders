@@ -27,8 +27,9 @@ public class GUI implements Observer{
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel title, rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
+	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
+	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private int diceFace = 0;
 
 	public GUI(Game game) {
@@ -49,15 +50,19 @@ public class GUI implements Observer{
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
 		status = new JLabel("Status");
-		nextPlayer = new JLabel("Next player");
 		currentPlayer = new JLabel("Current player");
-		player1_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player1.png")));
-		player2_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player2.png")));
-		player3_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player3.png")));
-		player4_Pin = new JLabel(new ImageIcon(getClass().getResource("./../images/player4.png")));
+		
+		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
+		player2_icon = new ImageIcon(getClass().getResource("./../images/player2.png"));
+		player3_icon = new ImageIcon(getClass().getResource("./../images/player3.png"));
+		player4_icon = new ImageIcon(getClass().getResource("./../images/player4.png"));
+		
+		player1_Pin = new JLabel(player1_icon);
+		player2_Pin = new JLabel(player2_icon);
+		player3_Pin = new JLabel(player3_icon);
+		player4_Pin = new JLabel(player4_icon);
 
 		setFont(status);
-		setFont(nextPlayer);
 		setFont(currentPlayer);
 
 		player2_Button = new JButton();
@@ -109,7 +114,6 @@ public class GUI implements Observer{
 		JPanel statusPanel = new JPanel();
 		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
 		statusPanel.add(currentPlayer);
-		statusPanel.add(nextPlayer);
 		statusPanel.add(status);
 		
 		JPanel ManagerPanel = new JPanel();
@@ -230,7 +234,7 @@ public class GUI implements Observer{
 		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			Font sizedFont = font.deriveFont(14f);
+			Font sizedFont = font.deriveFont(10f);
 			label.setFont(font);
 			label.setFont(sizedFont);
 		} catch (FontFormatException | IOException e) {
@@ -258,10 +262,34 @@ public class GUI implements Observer{
 		player.setBounds(x, y, 50, 50);
 	}
 	
+	public void updateCurrentPlayer() {
+		switch (game.currentPlayer().getName()) {
+		case "Player1":
+			currentPlayer.setIcon(player1_icon);
+			currentPlayer.setText("Current Player: Player 1");
+			break;
+		case "Player2":
+			currentPlayer.setIcon(player2_icon);
+			currentPlayer.setText("Current Player: Player 2");
+			break;
+		case "Player3":
+			currentPlayer.setIcon(player3_icon);
+			currentPlayer.setText("Current Player: Player 3");
+			break;
+		case "Player4":
+			currentPlayer.setIcon(player4_icon);
+			currentPlayer.setText("Current Player: Player 4");
+			break;
+		default:
+			break;
+		}
+		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
+		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
+	}
 	@Override
 	public void update(Observable o, Object arg) {
 		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
-		currentPlayer.setText("        " + game.currentPlayerName());
+		updateCurrentPlayer();
 	}
 
 	public static void main(String[] args) {
