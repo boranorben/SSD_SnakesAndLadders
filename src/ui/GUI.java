@@ -282,8 +282,7 @@ public class GUI implements Observer {
 		} else if (game.currentPlayersWins()) {
 			currentPlayer.setIcon(null);
 			currentPlayer.setText("");
-			updateStatus();
-		} else {
+		} else if (!game.nextPlayer().getFreeze()) {
 			switch (game.getArrayPlayer().length) {
 			case 2:
 				if (game.currentPlayerName().equals("Player1")) {
@@ -315,7 +314,7 @@ public class GUI implements Observer {
 			default:
 				break;
 			}
-			currentPlayer.setText("Current Player: " + game.nextPlayerName());
+			currentPlayer.setText("Current Player: " + game.nextPlayer().getName());
 		}
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
@@ -323,7 +322,7 @@ public class GUI implements Observer {
 
 	public void updateStatus() {
 		if (game.currentPlayersWins()) {
-			status.setText(game.currentPlayerName() + "Wins!");
+			status.setText(game.currentPlayerName() + "WINS!");
 			switch (game.currentPlayer().getName()) {
 			case "Player1":
 				status.setIcon(player1_icon);
@@ -341,6 +340,11 @@ public class GUI implements Observer {
 				break;
 			}
 		}
+		if (game.nextPlayer().getFreeze()) {
+			status.setText(game.nextPlayer().getName() + "'S STILL FREEZE!");
+		} else {
+			status.setText("");
+		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
 	}
@@ -353,6 +357,7 @@ public class GUI implements Observer {
 			moveForward(game.getInitialPosition(), game.getSteps());	
 		}
 		updateCurrentPlayer();
+		updateStatus();
 	}
 
 	public void moveForward(int position, int steps) {

@@ -44,8 +44,8 @@ public class Game extends Observable {
 				{ 80, 19 } };
 		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -43 }, { 64, -4 }, { 87, -61 }, { 92, -19 }, { 95, -20 },
 				{ 98, -19 } };
-		int freezes[] = { 26, 50, 59, 78, 85 };
-		int backwards[] = { 7, 8, 19, 29, 35, 61, 96 };
+		int freezes[] = { 26, 49, 57, 78, 86 };
+		int backwards[] = { 19, 29, 37, 61, 96 };
 
 		for (int[] ladder : ladders) {
 			board.createSpecialSquares("Ladder", ladder[0], ladder[1]);
@@ -155,9 +155,13 @@ public class Game extends Observable {
 	public String currentPlayerName() {
 		return currentPlayer().getName();
 	}
-
+	
 	public String nextPlayerName() {
 		return players[(currentPlayerIndex + 1) % players.length].getName();
+	}
+	
+	public Player nextPlayer() {
+		return players[(currentPlayerIndex + 1) % players.length];
 	}
 
 	public void end() {
