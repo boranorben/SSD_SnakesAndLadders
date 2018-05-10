@@ -9,8 +9,6 @@ public class Square {
 	private List<Piece> pieces;
 	private int number;
 	private boolean goal;
-	
-	protected String type = "Square";
 	protected int steps;
 	
 	public Square(int number) {
@@ -42,10 +40,6 @@ public class Square {
 	
 	public int getNumber() {
 		return this.number;
-	}
-	
-	public String getType() {
-		return this.type;
 	}
 	
 	public int getSteps() {

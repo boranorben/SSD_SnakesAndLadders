@@ -21,7 +21,7 @@ public class Board {
 	public void addPiece(Piece piece, int pos) {
 		squares[pos].addPiece(piece);
 	}
-	
+
 	public void restartPiece(Piece piece) {
 		this.squares[getPeicePosition(piece)].removePiece(piece);
 		addPiece(piece, 0);
@@ -31,7 +31,7 @@ public class Board {
 		int pos = getPeicePosition(piece);
 		this.squares[pos].removePiece(piece);
 		int newPos = 0;
-		if(squares[pos].getType() == "Backward") {
+		if (squares[pos] instanceof BackwardSquare) {
 			newPos = pos - steps;
 		} else {
 			newPos = pos + steps;
@@ -59,13 +59,13 @@ public class Board {
 	public boolean hasSpecialSquare(String type, int pos) {
 		switch (type) {
 		case "Snake":
-			return squares[pos].getType().equals("Snake") ? true : false;
+			return squares[pos] instanceof SnakeSquare ? true : false;
 		case "Ladder":
-			return squares[pos].getType().equals("Ladder") ? true : false;
+			return squares[pos] instanceof LadderSquare ? true : false;
 		case "Freeze":
-			return squares[pos].getType().equals("Freeze") ? true : false;
+			return squares[pos] instanceof FreezeSquare ? true : false;
 		case "Backward":
-			return squares[pos].getType().equals("Backward") ? true : false;
+			return squares[pos] instanceof BackwardSquare ? true : false;
 		default:
 			return false;
 		}

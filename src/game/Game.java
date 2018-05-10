@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Observable;
 
 import replay.Replay;
+import square.BackwardSquare;
+import square.FreezeSquare;
+import square.LadderSquare;
+import square.SnakeSquare;
 import square.Square;
 
 public class Game extends Observable{
@@ -65,19 +69,17 @@ public class Game extends Observable{
 			System.out.println("Dice faces: " + steps);
 			currentPlayerMovePiece(steps);
 			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-			if (getSquareType() != "Square") {
-				if (hasSnake() || hasLadder()) {
-					System.out.println(currentPlayerName() + " found " + getSquareType());
-					System.out.print(currentPlayerName() + " go to ");
-					currentPlayerFound();
-					System.out.println(currentPlayerPosition());
-				} else if (hasFreeze()) {
-					System.out.println(currentPlayerName() + " Freeze!");
-					setFreeze();
-				}
+			if (hasSnake() || hasLadder()) {
+				System.out.println(currentPlayerName() + " found " + getSquareType());
+				System.out.print(currentPlayerName() + " go to ");
+				currentPlayerFound();
+				System.out.println(currentPlayerPosition());
+			} else if (hasFreeze()) {
+				System.out.println(currentPlayerName() + " Freeze!");
+				setFreeze();
+			} else {
+				System.out.println(";sdfmzlksfm;ldmzjskalmd,fdnhjmk hefsdwfsdfhgjmhhgfdw");
 			}
-		} else {
-			System.out.println(currentPlayerName() + "'s still Frozen");
 		}
 		if (currentPlayersWins()) {
 			System.out.println(currentPlayerName() + "'s win!");
@@ -87,6 +89,19 @@ public class Game extends Observable{
 				switchPlayer();
 			}
 		}
+	}
+
+	public String getSquareType() {
+		Square square = board.getSquare()[currentPlayerPosition()];
+		if (square instanceof SnakeSquare) {
+			return "Snake";
+		} else if (square instanceof LadderSquare) {
+			return "Ladder";
+		} else if (square instanceof FreezeSquare) {
+			return "Freeze";
+		} else if (square instanceof BackwardSquare) {
+			return "Backward";
+		} else return "Square";
 	}
 
 	public void setFreeze() {
@@ -114,11 +129,11 @@ public class Game extends Observable{
 	public void currentPlayerMovePiece(int steps) {
 		currentPlayer().movePiece(board, steps);
 		Square currentSquareType = board.getSquare()[currentPlayerPosition()];
-		if (currentSquareType.getType().equals("Snake") || currentSquareType.getType().equals("Ladder")) {
+		if (currentSquareType instanceof SnakeSquare || currentSquareType instanceof LadderSquare) {
 			currentPlayer().movePiece(board, currentSquareType.getSteps());
 		}
 		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
-		this.steps = steps = currentSquareType.getSteps();
+		this.steps = steps + currentSquareType.getSteps();
 		setChanged();
 		notifyObservers();
 	}
@@ -148,11 +163,6 @@ public class Game extends Observable{
 		}
 	};
 
-	public String getSquareType() {
-		return board.getSquare()[currentPlayerPosition()].getType() == "Square" ? "Square"
-				: board.getSquare()[currentPlayerPosition()].getType();
-	}
-
 	public boolean hasSnake() {
 		return board.hasSpecialSquare("Snake", currentPlayerPosition());
 	}
@@ -167,14 +177,6 @@ public class Game extends Observable{
 
 	public boolean hasBackward() {
 		return board.hasSpecialSquare("Backward", currentPlayerPosition());
-	}
-
-	// print the type of the square
-	public void printTypes() {
-		for (Square square : board.getSquare()) {
-			System.out.println(
-					square.getNumber() + ": " + square.getType() + " to " + (square.getNumber() + square.getSteps()));
-		}
 	}
 
 	public void currentPlayerFound() {
@@ -212,7 +214,7 @@ public class Game extends Observable{
 	}
 	
 	public int getSteps() {
-		return this.getSteps();
+		return this.steps;
 	}
 
 	public void restartGame() {

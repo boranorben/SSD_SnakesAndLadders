@@ -336,7 +336,6 @@ public class GUI implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-
 		movePlayer(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
 		updateCurrentPlayer();
 	}

@@ -21,7 +21,7 @@ public class ConsloeUI {
 //			game.setFreeze(game.currentPlayerPosition());
 			System.out.println("Position: " + game.currentPlayerPosition());
 			// check if the current player are on special square
-			System.out.println("Square type: " + game.getSquareType());
+//			System.out.println("Square type: " + game.getSquareType());
 			// if the the current player found the ladder, move the piece to that the end of the ladder
 			if (game.hasLadder() || game.hasSnake()) {
 				System.out.print("From position " + game.currentPlayerPosition() + " to ");
