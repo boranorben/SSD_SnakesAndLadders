@@ -1,6 +1,6 @@
 package ui;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GridBagConstraints;
@@ -12,16 +12,13 @@ import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.GroupLayout;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import game.Game;
 import game.Player;
@@ -30,16 +27,14 @@ public class GUI implements Observer{
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
-	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
+	private JLabel title, rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
-	private GridBagConstraints gbc;
 	private int diceFace = 0;
 
 	public GUI(Game game) {
 		this.game = game;
 		homeFrame = new JFrame("Snakes and Ladders Game");
 		gameFrame = new JFrame("Snakes and Ladders Game");
-		gameFrame.setSize(730, 730);
 		homeFrame.setResizable(false);
 		gameFrame.setResizable(false);
 		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +44,7 @@ public class GUI implements Observer{
 	}
 
 	public void initComponent() {
+		title = new JLabel(new ImageIcon(getClass().getResource("./../images/titlePic.png")));
 		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
@@ -78,6 +74,7 @@ public class GUI implements Observer{
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
 
+		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
@@ -94,14 +91,8 @@ public class GUI implements Observer{
 		homeFrame.add(player3_Button, gbc);
 		homeFrame.add(player4_Button, gbc);
 
-		JPanel panelPlayer = new JPanel();
-		panelPlayer.add(player1_Pin);
-		panelPlayer.add(player2_Pin);
-		panelPlayer.add(player3_Pin);
-		panelPlayer.add(player4_Pin);
-
-		JPanel panelBoard = new JPanel();
-		panelBoard.add(boardPic);
+		JPanel boardPanel = new JPanel();
+		boardPanel.add(boardPic);
 		boardPic.setLayout(null);
 		boardPic.add(player1_Pin);
 
@@ -115,24 +106,29 @@ public class GUI implements Observer{
 		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player4_Pin);
 
-		JPanel panelController = new JPanel();
-		panelController.setLayout(new GridBagLayout());
-		panelController.add(restartButton);
-		panelController.add(replayButton);
-		panelController.add(die);
-		panelController.add(rollResult);
-
-		JPanel panelStatus = new JPanel();
-		panelStatus.add(currentPlayer);
-		panelStatus.add(nextPlayer);
-		panelStatus.add(status);
-
+		JPanel statusPanel = new JPanel();
+		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+		statusPanel.add(currentPlayer);
+		statusPanel.add(nextPlayer);
+		statusPanel.add(status);
+		
+		JPanel ManagerPanel = new JPanel();
+		ManagerPanel.setLayout(new BoxLayout(ManagerPanel, BoxLayout.Y_AXIS));
+		ManagerPanel.add(restartButton);
+		ManagerPanel.add(replayButton);
+		
+		JPanel controllerPanel = new JPanel();
+		controllerPanel.add(ManagerPanel);
+		controllerPanel.add(die);
+		controllerPanel.add(rollResult);
+		controllerPanel.add(statusPanel);
+		
+		gameFrame.add(title, BorderLayout.NORTH);
+		gameFrame.add(boardPanel, BorderLayout.CENTER);
+		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
+		
+		gameFrame.pack();
 		homeFrame.pack();
-
-		gameFrame.setLayout(new FlowLayout());
-		gameFrame.add(panelController);
-		gameFrame.add(panelStatus);
-		gameFrame.add(panelBoard);
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -234,7 +230,7 @@ public class GUI implements Observer{
 		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			Font sizedFont = font.deriveFont(20f);
+			Font sizedFont = font.deriveFont(14f);
 			label.setFont(font);
 			label.setFont(sizedFont);
 		} catch (FontFormatException | IOException e) {
