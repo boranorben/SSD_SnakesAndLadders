@@ -268,8 +268,11 @@ public class GUI implements Observer{
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
+		} else if (game.currentPlayersWins()) {
+			currentPlayer.setIcon(null);
+			currentPlayer.setText("");
+			updateStatus();
 		} else {
-			currentPlayer.setText("Current Player: " + game.nextPlayerName());
 			switch (game.getArrayPlayer().length) {
 			case 2:
 				if (game.currentPlayerName().equals("Player1")) {
@@ -301,9 +304,34 @@ public class GUI implements Observer{
 			default:
 				break;
 			}
+			currentPlayer.setText("Current Player: " + game.nextPlayerName());
 		}
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
+	}
+	
+	public void updateStatus() {
+		if (game.currentPlayersWins()) {	
+			status.setText(game.currentPlayerName() + "Wins!");
+			switch (game.currentPlayer().getName()) {
+			case "Player1":
+				status.setIcon(player1_icon);
+				break;
+			case "Player2":
+				status.setIcon(player2_icon);
+				break;
+			case "Player3":
+				status.setIcon(player3_icon);
+				break;
+			case "Player4":
+				status.setIcon(player4_icon);
+				break;
+			default:
+				break;
+			}
+		}
+		status.setHorizontalTextPosition(JLabel.CENTER);
+		status.setVerticalTextPosition(JLabel.BOTTOM);
 	}
 	
 	@Override
