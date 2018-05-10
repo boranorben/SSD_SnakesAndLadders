@@ -347,11 +347,15 @@ public class GUI implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		move(game.getInitialPosition(), game.getSteps());
+		if(game.getSteps() < 0) {
+			moveBackwards(game.getInitialPosition(), game.getSteps());
+		} else {
+			moveForward(game.getInitialPosition(), game.getSteps());	
+		}
 		updateCurrentPlayer();
 	}
 
-	public void move(int position, int steps) {
+	public void moveForward(int position, int steps) {
 		JLabel currentLabel = findPlayerName(game.currentPlayerName());
 		for (int i = 0; i < steps; i++) {
 			if (position % 10 == 0 && position != 0) {
@@ -366,6 +370,24 @@ public class GUI implements Observer {
 				}
 			}
 			position++;
+		}
+	}
+	
+	public void moveBackwards(int position, int steps) {
+		JLabel currentLabel = findPlayerName(game.currentPlayerName());
+		for (int i = 0; i > steps; i--) {
+			if ((position-1) % 10 == 0 && position != 0) {
+				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
+				game.switchPlayerPieceFace();
+			} else {
+				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY());
+				if (game.getPlayerPieceFace() == "right") {
+					currentLabel.setLocation(currentLabel.getX()-50, currentLabel.getY());
+				} else if (game.getPlayerPieceFace() == "left") {
+					currentLabel.setLocation(currentLabel.getX()+50, currentLabel.getY());
+				}
+			}
+			position--;
 		}
 	}
 
