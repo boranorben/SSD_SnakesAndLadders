@@ -149,8 +149,8 @@ public class Game extends Observable{
 		return currentPlayer().getName();
 	}
 	
-	public String nextPlayerName() {
-		return players[(currentPlayerIndex + 1) % players.length].getName();
+	public Player nextPlayer() {
+		return players[(currentPlayerIndex + 1) % players.length];
 	}
 	
 	public void end() {
