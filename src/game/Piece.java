@@ -7,7 +7,11 @@ public class Piece {
 		return this.face;
 	}
 	
-	public void setFace(String face) {
-		this.face = face;
+	public void switchFace() {
+		if(face == "right") {
+			face = "left";
+		} else {
+			face = "right";
+		}
 	}
 }

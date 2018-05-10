@@ -341,9 +341,20 @@ public class GUI implements Observer{
 	}
 	
 	public void move(int position, int steps) {
-		for(int i = 0; i < game.getSteps()*50; i+=50) {
-			movePlayer(findPlayerName(game.currentPlayerName()), position , 450);		
-			position += 50;
+		int movePosition = position * 50;
+		for(int i = 0; i < steps; i++) {
+			if(position % 10 == 0 && position != 0) {
+				movePlayer(findPlayerName(game.currentPlayerName()), movePosition, 400);
+				game.switchPlayerPieceFace();
+			} else {
+				movePlayer(findPlayerName(game.currentPlayerName()), movePosition , 450);		
+				if(game.getPlayerPieceFace() == "right") {
+					movePosition += 50;
+				} else if(game.getPlayerPieceFace() == "left"){
+					movePosition -= 50;
+				}
+			}
+			position++;
 		}
 	}
 	

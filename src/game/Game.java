@@ -137,6 +137,10 @@ public class Game extends Observable{
 		notifyObservers();
 	}
 	
+	public Square[] getSquare() {
+		return this.board.getSquare();
+	}
+	
 	public boolean currentPlayersWins() {
 		return board.pieceIsAtGoal(currentPlayer().getPiece());
 	}
@@ -235,8 +239,8 @@ public class Game extends Observable{
 		return currentPlayer().getPiece().getFace();
 	}
 	
-	public void setPlayerPieceFace(String face) {
-		currentPlayer().getPiece().setFace(face);
+	public void switchPlayerPieceFace() {
+		currentPlayer().getPiece().switchFace();
 	}
 
 }
