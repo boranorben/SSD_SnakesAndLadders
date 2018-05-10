@@ -102,13 +102,13 @@ public class GUI implements Observer{
 		boardPic.add(player1_Pin);
 
 		int x_initialPos = -50, y_initialPos = 450;
-		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
+		movePlayer(player1_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player1_Pin);
-		initPlayerPos(player2_Pin, x_initialPos, y_initialPos);
+		movePlayer(player2_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player2_Pin);
-		initPlayerPos(player3_Pin, x_initialPos, y_initialPos);
+		movePlayer(player3_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player3_Pin);
-		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
+		movePlayer(player1_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player4_Pin);
 
 		JPanel statusPanel = new JPanel();
@@ -260,7 +260,7 @@ public class GUI implements Observer{
 		return null;
 	}
 
-	public void initPlayerPos(JLabel player, int x, int y){
+	public void movePlayer(JLabel player, int x, int y){
 		player.setBounds(x, y, 50, 50);
 	}
 	
@@ -315,8 +315,12 @@ public class GUI implements Observer{
 	}
 	@Override
 	public void update(Observable o, Object arg) {
-		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
+		movePlayer(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
 		updateCurrentPlayer();
+	}
+	
+	public int calculatePosition(){
+		return (game.currentPlayerPosition() * 50) - 50;
 	}
 
 	public static void main(String[] args) {
