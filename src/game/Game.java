@@ -14,6 +14,7 @@ public class Game extends Observable{
 	private int currentPlayerIndex;
 	private boolean ended;
 	private int steps;
+	private int initialPosition = 0;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private List<Replay> tmp;
@@ -112,13 +113,12 @@ public class Game extends Observable{
 	}
 
 	public void currentPlayerMovePiece(int steps) {
+		this.initialPosition = currentPlayerPosition();
 		currentPlayer().movePiece(board, steps);
 		Square currentSquareType = board.getSquare()[currentPlayerPosition()];
-		if (currentSquareType.getType().equals("Snake") || currentSquareType.getType().equals("Ladder")) {
-			currentPlayer().movePiece(board, currentSquareType.getSteps());
-		}
 		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
-		this.steps = steps = currentSquareType.getSteps();
+		this.steps = steps + currentSquareType.getSteps();
+		currentPlayer().movePiece(board, currentSquareType.getSteps());
 		setChanged();
 		notifyObservers();
 	}
@@ -212,7 +212,7 @@ public class Game extends Observable{
 	}
 	
 	public int getSteps() {
-		return this.getSteps();
+		return this.steps;
 	}
 
 	public void restartGame() {
@@ -226,4 +226,15 @@ public class Game extends Observable{
 		return players;
 	}
 
+	public String getPlayerPieceFace() {
+		return players[currentPlayerIndex].getPiece().getFace();
+	}
+	
+	public void setPlayerPieceFace(String face) {
+		players[currentPlayerIndex].getPiece().setFace(face);
+	}
+	
+	public int getInitialPosition() {
+		return this.initialPosition;
+	}
 }

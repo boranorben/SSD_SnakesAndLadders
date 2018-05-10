@@ -74,7 +74,7 @@ public class GUI implements Observer{
 
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
-		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
+//		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
@@ -336,7 +336,12 @@ public class GUI implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
+		System.out.println(game.getSteps() + "asdas");
+		int currentPosition = game.getInitialPosition()*50;
+		for(int i = 0; i < game.getSteps()*50; i+=50) {
+			initPlayerPos(findPlayerName(game.currentPlayerName()), currentPosition , 450);		
+			currentPosition += 50;
+		}
 		updateCurrentPlayer();
 	}
 
