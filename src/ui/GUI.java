@@ -336,12 +336,15 @@ public class GUI implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		int currentPosition = game.getInitialPosition()*50;
-		for(int i = 0; i < game.getSteps()*50; i+=50) {
-			movePlayer(findPlayerName(game.currentPlayerName()), currentPosition , 450);		
-			currentPosition += 50;
-		}
+		move(game.getInitialPosition(), game.getSteps());
 		updateCurrentPlayer();
+	}
+	
+	public void move(int position, int steps) {
+		for(int i = 0; i < game.getSteps()*50; i+=50) {
+			movePlayer(findPlayerName(game.currentPlayerName()), position , 450);		
+			position += 50;
+		}
 	}
 	
 	public int calculatePosition(){

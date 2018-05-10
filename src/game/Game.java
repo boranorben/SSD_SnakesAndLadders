@@ -230,6 +230,14 @@ public class Game extends Observable{
 	public int getInitialPosition() {
 		return this.initialPosition;
 	}
+	
+	public String getPlayerPieceFace() {
+		return currentPlayer().getPiece().getFace();
+	}
+	
+	public void setPlayerPieceFace(String face) {
+		currentPlayer().getPiece().setFace(face);
+	}
 
 }
 
