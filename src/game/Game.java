@@ -2,11 +2,12 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import replay.Replay;
 import square.Square;
 
-public class Game {
+public class Game extends Observable{
 	private Player[] players;
 	private Die die;
 	private Board board;
@@ -116,6 +117,8 @@ public class Game {
 			currentPlayer().movePiece(board, currentSquareType.getSteps());
 		}
 		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
+		setChanged();
+		notifyObservers();
 	}
 
 	public boolean currentPlayersWins() {

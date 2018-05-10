@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -24,13 +26,14 @@ import com.sun.org.apache.bcel.internal.generic.NEW;
 import game.Game;
 import game.Player;
 
-public class GUI {
+public class GUI implements Observer{
 
 	private Game game;
 	private JFrame homeFrame, gameFrame;
 	private JLabel rollResult, boardPic, coverPic, status, nextPlayer, currentPlayer, player1_Pin, player2_Pin, player3_Pin, player4_Pin;
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private GridBagConstraints gbc;
+	private int diceFace = 0;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -42,6 +45,7 @@ public class GUI {
 		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initComponent();
+		game.addObserver(this);
 	}
 
 	public void initComponent() {
@@ -101,7 +105,7 @@ public class GUI {
 		boardPic.setLayout(null);
 		boardPic.add(player1_Pin);
 		//จริงๆ x_initialPos ต้องไปอยู่ด้านนอกboard แต่อันนี้แปะไว้ก่อน
-		int x_initialPos = 0, y_initialPos = 450;
+		int x_initialPos = -50, y_initialPos = 450;
 
 		initPlayerPos(player1_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player1_Pin);
@@ -163,7 +167,7 @@ public class GUI {
 					JOptionPane.showMessageDialog(null, "Game's alrealdy ended!");
 					die.setEnabled(false);
 				} else {
-					int diceFace = game.currentPlayerRollDice();
+					diceFace = game.currentPlayerRollDice();
 					switch (diceFace) {
 					case 1:
 						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
@@ -246,9 +250,22 @@ public class GUI {
 		else if(player == player4_Pin) return game.getArrayPlayer()[3];
 		return null;
 	}
+	
+	public JLabel findPlayerName(String name){
+		if(name.equals("Player1")) return player1_Pin;
+		else if(name.equals("Player2")) return player2_Pin;
+		else if(name.equals("Player3")) return player3_Pin;
+		else if(name.equals("Player4")) return player4_Pin;
+		return null;
+	}
 
 	public void initPlayerPos(JLabel player, int x, int y){
 		player.setBounds(x, y, 50, 50);
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		initPlayerPos(findPlayerName(game.currentPlayerName()), (game.currentPlayerPosition() + diceFace*50) - 50 , 450);
 	}
 
 	public static void main(String[] args) {
