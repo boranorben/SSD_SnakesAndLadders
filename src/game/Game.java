@@ -13,6 +13,7 @@ public class Game extends Observable{
 	private Board board;
 	private int currentPlayerIndex;
 	private boolean ended;
+	private int steps;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private List<Replay> tmp;
@@ -117,6 +118,7 @@ public class Game extends Observable{
 			currentPlayer().movePiece(board, currentSquareType.getSteps());
 		}
 		replay.add(new Replay(currentPlayer(), steps + currentSquareType.getSteps()));
+		this.steps = steps = currentSquareType.getSteps();
 		setChanged();
 		notifyObservers();
 	}
@@ -128,7 +130,11 @@ public class Game extends Observable{
 	public String currentPlayerName() {
 		return currentPlayer().getName();
 	}
-
+	
+	public String nextPlayerName() {
+		return players[(currentPlayerIndex + 1) % players.length].getName();
+	}
+	
 	public void end() {
 		ended = true;
 	};
@@ -204,11 +210,16 @@ public class Game extends Observable{
 			doReplay(tmp);
 		}
 	}
+	
+	public int getSteps() {
+		return this.getSteps();
+	}
 
 	public void restartGame() {
 		for (Player player : players) {
 			board.restartPiece(player.getPiece());
 		}
+		replay.clear();
 	}
 	
 	public Player[] getArrayPlayer(){

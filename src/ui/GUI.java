@@ -268,51 +268,72 @@ public class GUI implements Observer{
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-		} else  {
+		} else if (game.currentPlayersWins()) {
+			currentPlayer.setIcon(null);
+			currentPlayer.setText("");
+			updateStatus();
+		} else {
 			switch (game.getArrayPlayer().length) {
 			case 2:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			case 3:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else if (game.currentPlayerName().equals("Player2")) {
 					currentPlayer.setIcon(player3_icon);
-					currentPlayer.setText("Current Player: Player 3");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			case 4:
 				if (game.currentPlayerName().equals("Player1")) {
 					currentPlayer.setIcon(player2_icon);
-					currentPlayer.setText("Current Player: Player 2");
 				} else if (game.currentPlayerName().equals("Player2")) {
 					currentPlayer.setIcon(player3_icon);
-					currentPlayer.setText("Current Player: Player 3");
 				} else if (game.currentPlayerName().equals("Player3")) {
 					currentPlayer.setIcon(player4_icon);
-					currentPlayer.setText("Current Player: Player 4");
 				} else {
 					currentPlayer.setIcon(player1_icon);
-					currentPlayer.setText("Current Player: Player 1");
 				}
 				break;
 			default:
 				break;
 			}
+			currentPlayer.setText("Current Player: " + game.nextPlayerName());
 		}
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
 	}
+	
+	public void updateStatus() {
+		if (game.currentPlayersWins()) {	
+			status.setText(game.currentPlayerName() + "Wins!");
+			switch (game.currentPlayer().getName()) {
+			case "Player1":
+				status.setIcon(player1_icon);
+				break;
+			case "Player2":
+				status.setIcon(player2_icon);
+				break;
+			case "Player3":
+				status.setIcon(player3_icon);
+				break;
+			case "Player4":
+				status.setIcon(player4_icon);
+				break;
+			default:
+				break;
+			}
+		}
+		status.setHorizontalTextPosition(JLabel.CENTER);
+		status.setVerticalTextPosition(JLabel.BOTTOM);
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 
