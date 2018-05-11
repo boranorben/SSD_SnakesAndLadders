@@ -19,7 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
+import game.Board;
 import game.Game;
 import game.Player;
 
@@ -365,54 +367,72 @@ public class GUI implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		int position = game.getInitialPosition();
-		boolean checkEndBoard = false;
-		for (int i = 0; i < Math.abs(game.getSteps()); i++) {
-			if (checkEndBoard) {
-				moveBackwards(position);
-				position--;
-			} else {
-				if (game.getSteps() < 0) {
-					moveBackwards(position);
-					position--;
-				} else {
-					moveForward(position);
-					position++;
-				}
-			}
-			if (position == 100) {
-				checkEndBoard = true;
-			}
-		}
+		move(game.getSteps(), game.getInitialPosition());
 		updateCurrentPlayer();
 		updateStatus();
+
 	}
 
-	public void moveForward(int position) {
-		JLabel currentLabel = getPlayerPin();
-		if (position % 10 == 0 && position != 0) {
-			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
-			game.switchPlayerPieceFace();
-		} else {
-			if (game.getPlayerPieceFace() == "right") {
-				movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
-			} else if (game.getPlayerPieceFace() == "left") {
-				movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
+	public void move(int steps, int initialPos) {
+		Timer timer = new Timer(50, new ActionListener() {
+			int i = 0;
+			int position = initialPos;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (i < Math.abs(steps)) {
+					if (steps > 0) {
+						moveForward();
+					} else {
+						moveBackwards();
+					}
+					position += Integer.signum(steps);
+					i++;
+				} else {
+					((Timer) event.getSource()).stop();
+					sleep(100);
+					// if(finalPos >= Board.SIZE) {
+					//
+					// }
+				}
 			}
-		}
+
+			public void moveForward() {
+				JLabel currentLabel = getPlayerPin();
+				if (position % 10 == 0 && position != 0) {
+					movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
+					game.switchPlayerPieceFace();
+				} else {
+					if (game.getPlayerPieceFace() == "right") {
+						movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
+					} else if (game.getPlayerPieceFace() == "left") {
+						movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
+					}
+				}
+			}
+
+			public void moveBackwards() {
+				JLabel currentLabel = getPlayerPin();
+				if ((position - 1) % 10 == 0 && position != 0) {
+					movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
+					game.switchPlayerPieceFace();
+				} else {
+					if (game.getPlayerPieceFace() == "right") {
+						movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
+					} else if (game.getPlayerPieceFace() == "left") {
+						movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
+					}
+				}
+			}
+		});
+		timer.start();
 	}
 
-	public void moveBackwards(int position) {
-		JLabel currentLabel = getPlayerPin();
-		if ((position - 1) % 10 == 0 && position != 0) {
-			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
-			game.switchPlayerPieceFace();
-		} else {
-			if (game.getPlayerPieceFace() == "right") {
-				movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
-			} else if (game.getPlayerPieceFace() == "left") {
-				movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
-			}
+	public void sleep(int mSecs) {
+		try {
+			Thread.sleep(mSecs);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
