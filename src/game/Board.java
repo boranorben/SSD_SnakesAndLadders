@@ -7,7 +7,7 @@ import square.SnakeSquare;
 import square.Square;
 
 public class Board {
-	public static final int SIZE = 100;
+	public static final int SIZE = 101;
 	private Square[] squares;
 
 	public Board() {

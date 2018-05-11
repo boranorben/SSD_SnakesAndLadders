@@ -351,48 +351,54 @@ public class GUI implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(game.getSteps() < 0) {
-			moveBackwards(game.getInitialPosition(), game.getSteps());
-		} else {
-			moveForward(game.getInitialPosition(), game.getSteps());	
+		int position = game.getInitialPosition();
+		boolean checkEndBoard = false;
+		for (int i = 0; i < Math.abs(game.getSteps()); i++) {
+			if (checkEndBoard) {
+				moveBackwards(position);
+				position--;
+			} else {
+				if (game.getSteps() < 0) {
+					moveBackwards(position);
+					position--;
+				} else {
+					moveForward(position);
+					position++;
+				}
+			}
+			if (position == 100) {
+				checkEndBoard = true;
+			}
 		}
 		updateCurrentPlayer();
 		updateStatus();
 	}
 
-	public void moveForward(int position, int steps) {
+	public void moveForward(int position) {
 		JLabel currentLabel = findPlayerName(game.currentPlayerName());
-		for (int i = 0; i < steps; i++) {
-			if (position % 10 == 0 && position != 0) {
-				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
-				game.switchPlayerPieceFace();
-			} else {
-				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY());
-				if (game.getPlayerPieceFace() == "right") {
-					currentLabel.setLocation(currentLabel.getX()+50, currentLabel.getY());
-				} else if (game.getPlayerPieceFace() == "left") {
-					currentLabel.setLocation(currentLabel.getX()-50, currentLabel.getY());
-				}
+		if (position % 10 == 0 && position != 0) {
+			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
+			game.switchPlayerPieceFace();
+		} else {
+			if (game.getPlayerPieceFace() == "right") {
+				movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
+			} else if (game.getPlayerPieceFace() == "left") {
+				movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
 			}
-			position++;
 		}
 	}
-	
-	public void moveBackwards(int position, int steps) {
+
+	public void moveBackwards(int position) {
 		JLabel currentLabel = findPlayerName(game.currentPlayerName());
-		for (int i = 0; i > steps; i--) {
-			if ((position-1) % 10 == 0 && position != 0) {
-				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
-				game.switchPlayerPieceFace();
-			} else {
-				movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY());
-				if (game.getPlayerPieceFace() == "right") {
-					currentLabel.setLocation(currentLabel.getX()-50, currentLabel.getY());
-				} else if (game.getPlayerPieceFace() == "left") {
-					currentLabel.setLocation(currentLabel.getX()+50, currentLabel.getY());
-				}
+		if ((position - 1) % 10 == 0 && position != 0) {
+			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
+			game.switchPlayerPieceFace();
+		} else {
+			if (game.getPlayerPieceFace() == "right") {
+				movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
+			} else if (game.getPlayerPieceFace() == "left") {
+				movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
 			}
-			position--;
 		}
 	}
 
