@@ -281,7 +281,7 @@ public class GUI implements Observer {
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-		} else if (game.currentPlayersWins() && game.getSquareType().equals("Backward")) {
+		} else if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
 			currentPlayer.setIcon(null);
 			currentPlayer.setText("");
 		} else if (!game.nextPlayer().getFreeze()) {
@@ -350,7 +350,7 @@ public class GUI implements Observer {
 		if (!squareType.equals("Square")) {
 			switch (squareType) {
 			case "Backward":
-				status.setText(currentPlayerName + " founds Backward, Roll again and move backward!");
+				status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
 				break;
 			case "Freeze":
 				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
