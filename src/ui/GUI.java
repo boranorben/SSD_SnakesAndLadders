@@ -32,7 +32,6 @@ public class GUI implements Observer {
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private int diceFace = 0;
-	private int y = 450, x = 0;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -51,8 +50,8 @@ public class GUI implements Observer {
 		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
-		status = new JLabel("Status");
-		currentPlayer = new JLabel("Current player");
+		status = new JLabel();
+		currentPlayer = new JLabel();
 
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
 		player2_icon = new ImageIcon(getClass().getResource("./../images/player2.png"));
@@ -82,8 +81,7 @@ public class GUI implements Observer {
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
 
-		GridBagConstraints gbc;
-		gbc = new GridBagConstraints();
+		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
 		setTransparentBackground(player2_Button);
@@ -259,15 +257,19 @@ public class GUI implements Observer {
 		return null;
 	}
 
-	public JLabel findPlayerName(String name) {
-		if (name.equals("Player1"))
+	public JLabel getPlayerPin() {
+		switch (game.currentPlayerName()) {
+		case "Player1":
 			return player1_Pin;
-		else if (name.equals("Player2"))
+		case "Player2":
 			return player2_Pin;
-		else if (name.equals("Player3"))
+		case "Player3":
 			return player3_Pin;
-		else if (name.equals("Player4"))
+		case "Player4":
 			return player4_Pin;
+		default:
+			break;
+		}
 		return null;
 	}
 
@@ -279,7 +281,7 @@ public class GUI implements Observer {
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-		} else if (game.currentPlayersWins()) {
+		} else if (game.currentPlayersWins() && game.getSquareType().equals("Backward")) {
 			currentPlayer.setIcon(null);
 			currentPlayer.setText("");
 		} else if (!game.nextPlayer().getFreeze()) {
@@ -321,9 +323,11 @@ public class GUI implements Observer {
 	}
 
 	public void updateStatus() {
+		String squareType = game.getSquareType();
+		String currentPlayerName = game.currentPlayerName();
 		if (game.currentPlayersWins()) {
-			status.setText(game.currentPlayerName() + "WINS!");
-			switch (game.currentPlayer().getName()) {
+			status.setText(currentPlayerName + "WINS!");
+			switch (currentPlayerName) {
 			case "Player1":
 				status.setIcon(player1_icon);
 				break;
@@ -341,9 +345,19 @@ public class GUI implements Observer {
 			}
 		}
 		if (game.nextPlayer().getFreeze()) {
-			status.setText(game.nextPlayer().getName() + "'S STILL FREEZE!");
-		} else {
-			status.setText("");
+			status.setText(game.nextPlayer().getName() + "'s still FREEZE!");
+		}
+		if (!squareType.equals("Square")) {
+			switch (squareType) {
+			case "Backward":
+				status.setText(currentPlayerName + " founds Backward, Roll again and move backward!");
+				break;
+			case "Freeze":
+				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
+			default:
+				status.setText(currentPlayerName + " founds " + squareType);
+				break;
+			}
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
@@ -375,7 +389,7 @@ public class GUI implements Observer {
 	}
 
 	public void moveForward(int position) {
-		JLabel currentLabel = findPlayerName(game.currentPlayerName());
+		JLabel currentLabel = getPlayerPin();
 		if (position % 10 == 0 && position != 0) {
 			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
 			game.switchPlayerPieceFace();
@@ -389,7 +403,7 @@ public class GUI implements Observer {
 	}
 
 	public void moveBackwards(int position) {
-		JLabel currentLabel = findPlayerName(game.currentPlayerName());
+		JLabel currentLabel = getPlayerPin();
 		if ((position - 1) % 10 == 0 && position != 0) {
 			movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
 			game.switchPlayerPieceFace();
@@ -400,10 +414,6 @@ public class GUI implements Observer {
 				movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
 			}
 		}
-	}
-
-	public int calculatePosition() {
-		return (game.currentPlayerPosition() * 50) - 50;
 	}
 
 	public static void main(String[] args) {
