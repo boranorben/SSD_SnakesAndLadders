@@ -9,8 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -21,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import game.Board;
 import game.Game;
 import game.Player;
 
@@ -31,6 +29,7 @@ public class GUI implements Observer {
 	private JFrame homeFrame, gameFrame;
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
 			player4_Pin;
+	private List<JLabel> players = new ArrayList<JLabel>();
 	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private int diceFace = 0;
@@ -144,6 +143,8 @@ public class GUI implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeFrame(2);
+				players.add(player1_Pin);
+				players.add(player2_Pin);
 			}
 		});
 
@@ -152,6 +153,9 @@ public class GUI implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeFrame(3);
+				players.add(player1_Pin);
+				players.add(player2_Pin);
+				players.add(player3_Pin);
 			}
 		});
 
@@ -160,6 +164,10 @@ public class GUI implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeFrame(4);
+				players.add(player1_Pin);
+				players.add(player2_Pin);
+				players.add(player3_Pin);
+				players.add(player4_Pin);
 			}
 		});
 
@@ -194,7 +202,7 @@ public class GUI implements Observer {
 					default:
 						break;
 					}
-					game.gameLogic(diceFace);
+					game.gameLogic(diceFace);	
 				}
 
 			}
@@ -262,13 +270,13 @@ public class GUI implements Observer {
 	public JLabel getPlayerPin() {
 		switch (game.currentPlayerName()) {
 		case "Player1":
-			return player1_Pin;
+			return players.get(0);
 		case "Player2":
-			return player2_Pin;
+			return players.get(1);
 		case "Player3":
-			return player3_Pin;
+			return players.get(2);
 		case "Player4":
-			return player4_Pin;
+			return players.get(3);
 		default:
 			break;
 		}
@@ -374,60 +382,59 @@ public class GUI implements Observer {
 	}
 
 	public void move(int steps, int initialPos) {
-		Timer timer = new Timer(50, new ActionListener() {
+		
+		Timer timer = new Timer(500, new ActionListener() {
 			int i = 0;
 			int position = initialPos;
-
+			
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (i < Math.abs(steps)) {
 					if (steps > 0) {
-						moveForward();
+						moveForward(position);
 					} else {
-						moveBackwards();
+						moveBackwards(position);
 					}
 					position += Integer.signum(steps);
 					i++;
 				} else {
 					((Timer) event.getSource()).stop();
-					sleep(100);
-					// if(finalPos >= Board.SIZE) {
-					//
-					// }
 				}
 			}
 
-			public void moveForward() {
-				JLabel currentLabel = getPlayerPin();
-				if (position % 10 == 0 && position != 0) {
-					movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() - 50);
-					game.switchPlayerPieceFace();
-				} else {
-					if (game.getPlayerPieceFace() == "right") {
-						movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
-					} else if (game.getPlayerPieceFace() == "left") {
-						movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
-					}
-				}
-			}
-
-			public void moveBackwards() {
-				JLabel currentLabel = getPlayerPin();
-				if ((position - 1) % 10 == 0 && position != 0) {
-					movePlayer(currentLabel, currentLabel.getX(), currentLabel.getY() + 50);
-					game.switchPlayerPieceFace();
-				} else {
-					if (game.getPlayerPieceFace() == "right") {
-						movePlayer(currentLabel, currentLabel.getX() - 50, currentLabel.getY());
-					} else if (game.getPlayerPieceFace() == "left") {
-						movePlayer(currentLabel, currentLabel.getX() + 50, currentLabel.getY());
-					}
-				}
-			}
+			
 		});
 		timer.start();
 	}
 
+	public void moveForward(int position) {
+		JLabel currentLabel = getPlayerPin();
+		if (position % 10 == 0 && position != 0) {
+			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()-50);
+			game.switchPlayerPieceFace();
+		} else {
+			if (game.getPlayerPieceFace() == "right") {
+				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
+			} else if (game.getPlayerPieceFace() == "left") {
+				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
+			}
+		}
+	}
+
+	public void moveBackwards(int position) {
+		JLabel currentLabel = getPlayerPin();
+		if ((position - 1) % 10 == 0 && position != 0) {
+			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
+			game.switchPlayerPieceFace();
+		} else {
+			if (game.getPlayerPieceFace() == "right") {
+				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
+			} else if (game.getPlayerPieceFace() == "left") {
+				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
+			}
+		}
+	}
+	
 	public void sleep(int mSecs) {
 		try {
 			Thread.sleep(mSecs);
