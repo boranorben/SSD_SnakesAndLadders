@@ -382,7 +382,7 @@ public class GUI implements Observer {
 	}
 
 	public void move(int steps, int initialPos) {
-		
+		JLabel current = getPlayerPin();
 		Timer timer = new Timer(500, new ActionListener() {
 			int i = 0;
 			int position = initialPos;
@@ -391,9 +391,9 @@ public class GUI implements Observer {
 			public void actionPerformed(ActionEvent event) {
 				if (i < Math.abs(steps)) {
 					if (steps > 0) {
-						moveForward(position);
+						moveForward(position, current);
 					} else {
-						moveBackwards(position);
+						moveBackwards(position, current);
 					}
 					position += Integer.signum(steps);
 					i++;
@@ -407,8 +407,7 @@ public class GUI implements Observer {
 		timer.start();
 	}
 
-	public void moveForward(int position) {
-		JLabel currentLabel = getPlayerPin();
+	public void moveForward(int position, JLabel currentLabel) {
 		if (position % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()-50);
 			game.switchPlayerPieceFace();
@@ -421,8 +420,7 @@ public class GUI implements Observer {
 		}
 	}
 
-	public void moveBackwards(int position) {
-		JLabel currentLabel = getPlayerPin();
+	public void moveBackwards(int position, JLabel currentLabel) {
 		if ((position - 1) % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
 			game.switchPlayerPieceFace();
