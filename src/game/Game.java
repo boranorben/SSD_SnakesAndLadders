@@ -20,6 +20,7 @@ public class Game extends Observable {
 	private boolean ended;
 	private int steps;
 	private int initialPosition = 0;
+	private Player previousPlayer;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private List<Replay> tmp;
@@ -136,12 +137,12 @@ public class Game extends Observable {
 		this.initialPosition = currentPlayerPosition();
 		currentPlayer().movePiece(board, steps);
 		replay.add(new Replay(currentPlayer(), steps));
-		setChanged();
-		notifyObservers();
-		if (getSquareType().equals("Snake") || getSquareType().equals("Ladder")) {
-			Square currentSquareType = board.getSquare()[currentPlayerPosition()];
-			currentPlayerMovePiece(currentSquareType.getSteps());
+		if(getSquareType().equals("Snake") || getSquareType().equals("Ladder")) {
+			int specialSteps = getSquare()[currentPlayerPosition()].getSteps();
+			currentPlayer().movePiece(board, specialSteps);
+			replay.add(new Replay(currentPlayer(), specialSteps));
 		}
+			
 	}
 
 	public Square[] getSquare() {

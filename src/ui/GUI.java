@@ -203,6 +203,7 @@ public class GUI implements Observer {
 						break;
 					}
 					game.gameLogic(diceFace);	
+					move(game.getSteps(), game.getInitialPosition());
 				}
 
 			}
@@ -410,11 +411,10 @@ public class GUI implements Observer {
 	public void moveForward(int position, JLabel currentLabel) {
 		if (position % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()-50);
-			game.switchPlayerPieceFace();
 		} else {
-			if (game.getPlayerPieceFace() == "right") {
+			if ((position/10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
-			} else if (game.getPlayerPieceFace() == "left") {
+			} else {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
 			}
 		}
@@ -423,11 +423,10 @@ public class GUI implements Observer {
 	public void moveBackwards(int position, JLabel currentLabel) {
 		if ((position - 1) % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
-			game.switchPlayerPieceFace();
 		} else {
-			if (game.getPlayerPieceFace() == "right") {
+			if ((position/10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
-			} else if (game.getPlayerPieceFace() == "left") {
+			} else {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
 			}
 		}
