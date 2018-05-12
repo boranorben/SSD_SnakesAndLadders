@@ -269,7 +269,8 @@ public class GUI implements Observer {
 	}
 
 	public JLabel getPlayerPin() {
-		switch (game.currentPlayerName()) {
+		String currentPlayerName = game.getPreviousPlayer().getName();
+		switch (currentPlayerName) {
 		case "Player1":
 			return players.get(0);
 		case "Player2":
@@ -390,6 +391,7 @@ public class GUI implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				System.out.println("position: " + position);
 				if (i < Math.abs(steps)) {
 					if (steps > 0) {
 						moveForward(position, current);

@@ -1,4 +1,3 @@
-
 package game;
 
 import java.util.ArrayList;
@@ -129,6 +128,7 @@ public class Game extends Observable {
 	}
 
 	public void currentPlayerMovePiece(int steps) {
+		previousPlayer = currentPlayer();
 		if(getSquareType().equals("Backward")) {
 			this.steps = -steps;
 		} else {
@@ -138,12 +138,18 @@ public class Game extends Observable {
 		currentPlayer().movePiece(board, steps);
 		replay.add(new Replay(currentPlayer(), steps));
 		if(getSquareType().equals("Snake") || getSquareType().equals("Ladder")) {
-			int specialSteps = getSquare()[currentPlayerPosition()].getSteps();
-			currentPlayer().movePiece(board, specialSteps);
-			replay.add(new Replay(currentPlayer(), specialSteps));
+			moveSpecial();
 		}
 			
 	}
+	
+	public void moveSpecial() {
+		int specialSteps = getSquare()[currentPlayerPosition()].getSteps();
+		currentPlayer().movePiece(board, specialSteps);
+		this.steps += specialSteps;
+		replay.add(new Replay(currentPlayer(), specialSteps));
+	}
+	
 
 	public Square[] getSquare() {
 		return this.board.getSquare();
@@ -254,5 +260,8 @@ public class Game extends Observable {
 	public void switchPlayerPieceFace() {
 		currentPlayer().getPiece().switchFace();
 	}
-
+	
+	public Player getPreviousPlayer() {
+		return this.previousPlayer;
+	}
 }
