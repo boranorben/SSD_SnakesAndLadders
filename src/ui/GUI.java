@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import game.Game;
-import game.Player;
 
 public class GUI implements Observer {
 
@@ -256,18 +255,6 @@ public class GUI implements Observer {
 		}
 	}
 
-	public Player changePlayerType(JLabel player) {
-		if (player == player1_Pin)
-			return game.getArrayPlayer()[0];
-		else if (player == player2_Pin)
-			return game.getArrayPlayer()[1];
-		else if (player == player3_Pin)
-			return game.getArrayPlayer()[2];
-		else if (player == player4_Pin)
-			return game.getArrayPlayer()[3];
-		return null;
-	}
-
 	public JLabel getPlayerPin() {
 		String currentPlayerName = game.getPreviousPlayer().getName();
 		switch (currentPlayerName) {
@@ -428,7 +415,7 @@ public class GUI implements Observer {
 		if ((position - 1) % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
 		} else {
-			if (((position - 1) /10) % 2 == 0) {
+			if (((position - 1)/10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
 			} else {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
