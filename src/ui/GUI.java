@@ -280,42 +280,45 @@ public class GUI implements Observer {
 		if (game.getArrayPlayer() == null) {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
-		} else if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
-			currentPlayer.setIcon(null);
-			currentPlayer.setText("");
-		} else if (!game.nextPlayer().getFreeze()) {
-			switch (game.getArrayPlayer().length) {
-			case 2:
-				if (game.currentPlayerName().equals("Player1")) {
-					currentPlayer.setIcon(player2_icon);
-				} else {
-					currentPlayer.setIcon(player1_icon);
+		} else {
+			String currentPlayerName = game.getPreviousPlayer().getName();
+			if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
+				currentPlayer.setIcon(getPlayerPin().getIcon());
+				currentPlayer.setText("");
+			} else if (!game.currentPlayer().getFreeze()) {
+				switch (game.getArrayPlayer().length) {
+				case 2:
+					if (currentPlayerName.equals("Player1")) {
+						currentPlayer.setIcon(player1_icon);
+					} else {
+						currentPlayer.setIcon(player2_icon);
+					}
+					break;
+				case 3:
+					if (currentPlayerName.equals("Player1")) {
+						currentPlayer.setIcon(player2_icon);
+					} else if (currentPlayerName.equals("Player2")) {
+						currentPlayer.setIcon(player3_icon);
+					} else {
+						currentPlayer.setIcon(player1_icon);
+					}
+					break;
+				case 4:
+					if (currentPlayerName.equals("Player1")) {
+						currentPlayer.setIcon(player2_icon);
+					} else if (currentPlayerName.equals("Player2")) {
+						currentPlayer.setIcon(player3_icon);
+					} else if (currentPlayerName.equals("Player3")) {
+						currentPlayer.setIcon(player4_icon);
+					} else {
+						currentPlayer.setIcon(player1_icon);
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case 3:
-				if (game.currentPlayerName().equals("Player1")) {
-					currentPlayer.setIcon(player2_icon);
-				} else if (game.currentPlayerName().equals("Player2")) {
-					currentPlayer.setIcon(player3_icon);
-				} else {
-					currentPlayer.setIcon(player1_icon);
-				}
-				break;
-			case 4:
-				if (game.currentPlayerName().equals("Player1")) {
-					currentPlayer.setIcon(player2_icon);
-				} else if (game.currentPlayerName().equals("Player2")) {
-					currentPlayer.setIcon(player3_icon);
-				} else if (game.currentPlayerName().equals("Player3")) {
-					currentPlayer.setIcon(player4_icon);
-				} else {
-					currentPlayer.setIcon(player1_icon);
-				}
-				break;
-			default:
-				break;
+				currentPlayer.setText("Current Player: " + currentPlayerName);
 			}
-			currentPlayer.setText("Current Player: " + game.nextPlayer().getName());
 		}
 		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
 		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
@@ -323,7 +326,7 @@ public class GUI implements Observer {
 
 	public void updateStatus() {
 		String squareType = game.getSquareType();
-		String currentPlayerName = game.currentPlayerName();
+		String currentPlayerName = game.getPreviousPlayer().getName();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
 			switch (currentPlayerName) {
@@ -343,8 +346,8 @@ public class GUI implements Observer {
 				break;
 			}
 		}
-		if (game.nextPlayer().getFreeze()) {
-			status.setText(game.nextPlayer().getName() + "'s still FREEZE!");
+		if (game.currentPlayer().getFreeze()) {
+			status.setText(currentPlayerName + "'s still FREEZE!");
 		}
 		if (!squareType.equals("Square")) {
 			switch (squareType) {
@@ -357,6 +360,8 @@ public class GUI implements Observer {
 				status.setText(currentPlayerName + " founds " + squareType);
 				break;
 			}
+		} else {
+			status.setText("");
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
@@ -380,6 +385,7 @@ public class GUI implements Observer {
 			public synchronized void actionPerformed(ActionEvent event) {
 				System.out.println("position: " + position);
 				if (i < Math.abs(steps)) {
+					die.setEnabled(false);
 					if (steps > 0) {
 						moveForward(position, current);
 					} else {
@@ -391,10 +397,9 @@ public class GUI implements Observer {
 					((Timer) event.getSource()).stop();
 					sleep(500);
 					game.moveSpecial();
+					die.setEnabled(true);
 				}
 			}
-
-			
 		});
 		timer.start();
 	}
