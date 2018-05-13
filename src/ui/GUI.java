@@ -203,7 +203,7 @@ public class GUI implements Observer {
 						break;
 					}
 					game.gameLogic(diceFace);	
-					move(game.getSteps(), game.getInitialPosition());
+//					move(game.getSteps(), game.getInitialPosition());
 				}
 
 			}
@@ -390,7 +390,7 @@ public class GUI implements Observer {
 			int position = initialPos;
 			
 			@Override
-			public void actionPerformed(ActionEvent event) {
+			public synchronized void actionPerformed(ActionEvent event) {
 				System.out.println("position: " + position);
 				if (i < Math.abs(steps)) {
 					if (steps > 0) {
@@ -402,6 +402,8 @@ public class GUI implements Observer {
 					i++;
 				} else {
 					((Timer) event.getSource()).stop();
+					sleep(500);
+					game.moveSpecial();
 				}
 			}
 
@@ -426,7 +428,7 @@ public class GUI implements Observer {
 		if ((position - 1) % 10 == 0 && position != 0) {
 			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
 		} else {
-			if ((position/10) % 2 == 0) {
+			if (((position - 1) /10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
 			} else {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());

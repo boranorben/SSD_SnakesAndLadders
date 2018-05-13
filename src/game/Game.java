@@ -42,7 +42,7 @@ public class Game extends Observable {
 	public void createSpecial() {
 		int ladders[][] = { { 1, 37 }, { 4, 10 }, { 9, 22 }, { 21, 21 }, { 28, 56 }, { 51, 16 }, { 72, 19 },
 				{ 80, 19 } };
-		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -43 }, { 64, -4 }, { 87, -51 }, { 92, -19 }, { 95, -20 },
+		int snakes[][] = { { 17, -10 }, { 54, -20 }, { 62, -43 }, { 64, -4 }, { 87, -51 }, { 93, -20 }, { 95, -20 },
 				{ 98, -19 } };
 		int freezes[] = { 26, 49, 57, 78, 86 };
 		int backwards[] = { 19, 29, 37, 61, 96 };
@@ -71,15 +71,11 @@ public class Game extends Observable {
 			System.out.println("Dice faces: " + steps);
 			currentPlayerMovePiece(steps);
 			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-			if (hasSnake() || hasLadder()) {
-				System.out.println(currentPlayerName() + " found " + getSquareType());
-				System.out.print(currentPlayerName() + " go to ");
-				currentPlayerFound();
-				System.out.println(currentPlayerPosition());
-			} else if (hasFreeze()) {
+			if (hasFreeze()) {
 				System.out.println(currentPlayerName() + " Freeze!");
 				setFreeze();
 			}
+			// moveSpecial();
 		}
 		if (currentPlayersWins()) {
 			System.out.println(currentPlayerName() + "'s win!");
@@ -129,7 +125,7 @@ public class Game extends Observable {
 
 	public void currentPlayerMovePiece(int steps) {
 		previousPlayer = currentPlayer();
-		if(getSquareType().equals("Backward")) {
+		if (getSquareType().equals("Backward")) {
 			this.steps = -steps;
 		} else {
 			this.steps = steps;
@@ -137,19 +133,26 @@ public class Game extends Observable {
 		this.initialPosition = currentPlayerPosition();
 		currentPlayer().movePiece(board, steps);
 		replay.add(new Replay(currentPlayer(), steps));
-		if(getSquareType().equals("Snake") || getSquareType().equals("Ladder")) {
-			moveSpecial();
-		}
-			
+		setChanged();
+		notifyObservers();
+
 	}
-	
+
 	public void moveSpecial() {
-		int specialSteps = getSquare()[currentPlayerPosition()].getSteps();
-		currentPlayer().movePiece(board, specialSteps);
-		this.steps += specialSteps;
-		replay.add(new Replay(currentPlayer(), specialSteps));
+		Square previousSquare = board.getSquare()[board.getPeicePosition(previousPlayer.getPiece())];
+		if (previousSquare instanceof SnakeSquare || previousSquare instanceof LadderSquare) {
+			this.initialPosition = previousSquare.getNumber();
+			this.previousPlayer.movePiece(board, previousSquare.getSteps());
+			this.steps = previousSquare.getSteps();
+			replay.add(new Replay(this.previousPlayer, previousSquare.getSteps()));
+			setChanged();
+			notifyObservers();
+		}
 	}
-	
+
+	public int getPreviousPosition() {
+		return board.getSquare()[this.steps].getNumber();
+	}
 
 	public Square[] getSquare() {
 		return this.board.getSquare();
@@ -162,11 +165,11 @@ public class Game extends Observable {
 	public String currentPlayerName() {
 		return currentPlayer().getName();
 	}
-	
+
 	public String nextPlayerName() {
 		return players[(currentPlayerIndex + 1) % players.length].getName();
 	}
-	
+
 	public Player nextPlayer() {
 		return players[(currentPlayerIndex + 1) % players.length];
 	}
@@ -260,7 +263,7 @@ public class Game extends Observable {
 	public void switchPlayerPieceFace() {
 		currentPlayer().getPiece().switchFace();
 	}
-	
+
 	public Player getPreviousPlayer() {
 		return this.previousPlayer;
 	}
