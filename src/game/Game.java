@@ -150,10 +150,6 @@ public class Game extends Observable {
 		}
 	}
 
-	public int getPreviousPosition() {
-		return board.getSquare()[this.steps].getNumber();
-	}
-
 	public Square[] getSquare() {
 		return this.board.getSquare();
 	}
@@ -262,5 +258,13 @@ public class Game extends Observable {
 
 	public Player getPreviousPlayer() {
 		return this.previousPlayer;
+	}
+	
+	public String getPreviousPlayerName() {
+		return getPreviousPlayer().getName();
+	}
+	
+	public int getPreviousPosition() {
+		return board.getPeicePosition(getPreviousPlayer().getPiece());
 	}
 }

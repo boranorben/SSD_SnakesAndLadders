@@ -201,6 +201,7 @@ public class GUI implements Observer {
 					default:
 						break;
 					}
+					die.setEnabled(false);
 					game.gameLogic(diceFace);	
 //					move(game.getSteps(), game.getInitialPosition());
 				}
@@ -281,38 +282,23 @@ public class GUI implements Observer {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
 		} else {
-			String currentPlayerName = game.getPreviousPlayer().getName();
+			String currentPlayerName = game.getPreviousPlayerName();
 			if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
 				currentPlayer.setIcon(getPlayerPin().getIcon());
 				currentPlayer.setText("");
 			} else if (!game.currentPlayer().getFreeze()) {
-				switch (game.getArrayPlayer().length) {
-				case 2:
-					if (currentPlayerName.equals("Player1")) {
-						currentPlayer.setIcon(player1_icon);
-					} else {
-						currentPlayer.setIcon(player2_icon);
-					}
+				switch (currentPlayerName) {
+				case "Player1":
+					currentPlayer.setIcon(player1_icon);
 					break;
-				case 3:
-					if (currentPlayerName.equals("Player1")) {
-						currentPlayer.setIcon(player2_icon);
-					} else if (currentPlayerName.equals("Player2")) {
-						currentPlayer.setIcon(player3_icon);
-					} else {
-						currentPlayer.setIcon(player1_icon);
-					}
+				case "Player2":
+					currentPlayer.setIcon(player2_icon);
 					break;
-				case 4:
-					if (currentPlayerName.equals("Player1")) {
-						currentPlayer.setIcon(player2_icon);
-					} else if (currentPlayerName.equals("Player2")) {
-						currentPlayer.setIcon(player3_icon);
-					} else if (currentPlayerName.equals("Player3")) {
-						currentPlayer.setIcon(player4_icon);
-					} else {
-						currentPlayer.setIcon(player1_icon);
-					}
+				case "Player3":
+					currentPlayer.setIcon(player3_icon);
+					break;
+				case "Player4":
+					currentPlayer.setIcon(player4_icon);
 					break;
 				default:
 					break;
@@ -326,7 +312,8 @@ public class GUI implements Observer {
 
 	public void updateStatus() {
 		String squareType = game.getSquareType();
-		String currentPlayerName = game.getPreviousPlayer().getName();
+		String currentPlayerName = game.getPreviousPlayerName();
+		int currentPosition = game.getPreviousPosition();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
 			switch (currentPlayerName) {
@@ -357,11 +344,11 @@ public class GUI implements Observer {
 			case "Freeze":
 				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
 			default:
-				status.setText(currentPlayerName + " founds " + squareType);
+				status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
 				break;
 			}
 		} else {
-			status.setText("");
+			status.setText(currentPlayerName + " goes to " + currentPosition);
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
@@ -385,7 +372,6 @@ public class GUI implements Observer {
 			public synchronized void actionPerformed(ActionEvent event) {
 				System.out.println("position: " + position);
 				if (i < Math.abs(steps)) {
-					die.setEnabled(false);
 					if (steps > 0) {
 						moveForward(position, current);
 					} else {
