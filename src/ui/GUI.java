@@ -135,7 +135,7 @@ public class GUI implements Observer {
 		gameFrame.pack();
 		homeFrame.pack();
 
-		updateCurrentPlayer();
+//		updateCurrentPlayer();
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -278,97 +278,101 @@ public class GUI implements Observer {
 		player.setBounds(x, y, 50, 50);
 	}
 
-	public void updateCurrentPlayer() {
-		if (game.getArrayPlayer() == null) {
-			currentPlayer.setIcon(player1_icon);
-			currentPlayer.setText("Current Player: Player 1");
-		} else {
-			String currentPlayerName = game.getPreviousPlayerName();
-			if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
-				currentPlayer.setIcon(getPlayerPin().getIcon());
-				currentPlayer.setText("");
-			} else if (!game.currentPlayer().getFreeze()) {
-				switch (currentPlayerName) {
-				case "Player1":
-					currentPlayer.setIcon(player1_icon);
-					break;
-				case "Player2":
-					currentPlayer.setIcon(player2_icon);
-					break;
-				case "Player3":
-					currentPlayer.setIcon(player3_icon);
-					break;
-				case "Player4":
-					currentPlayer.setIcon(player4_icon);
-					break;
-				default:
-					break;
-				}
-				currentPlayer.setText("Current Player: " + currentPlayerName);
-			}
-		}
-		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
-		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
-	}
+//	public void updateCurrentPlayer() {
+//		if (game.getArrayPlayer() == null) {
+//			currentPlayer.setIcon(player1_icon);
+//			currentPlayer.setText("Current Player: Player 1");
+//		} else {
+//			String currentPlayerName = game.getPreviousPlayerName();
+//			if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
+//				currentPlayer.setIcon(getPlayerPin().getIcon());
+//				currentPlayer.setText("");
+//			} else if (!game.currentPlayer().getFreeze()) {
+//				switch (currentPlayerName) {
+//				case "Player1":
+//					currentPlayer.setIcon(player1_icon);
+//					break;
+//				case "Player2":
+//					currentPlayer.setIcon(player2_icon);
+//					break;
+//				case "Player3":
+//					currentPlayer.setIcon(player3_icon);
+//					break;
+//				case "Player4":
+//					currentPlayer.setIcon(player4_icon);
+//					break;
+//				default:
+//					break;
+//				}
+//				currentPlayer.setText("Current Player: " + currentPlayerName);
+//			}
+//		}
+//		currentPlayer.setHorizontalTextPosition(JLabel.CENTER);
+//		currentPlayer.setVerticalTextPosition(JLabel.BOTTOM);
+//	}
 
-	public void updateStatus() {
-		String squareType = game.getSquareType();
-		String currentPlayerName = game.getPreviousPlayerName();
-		int currentPosition = game.getPreviousPosition();
-		if (game.currentPlayersWins()) {
-			status.setText(currentPlayerName + "WINS!");
-			switch (currentPlayerName) {
-			case "Player1":
-				status.setIcon(player1_icon);
-				break;
-			case "Player2":
-				status.setIcon(player2_icon);
-				break;
-			case "Player3":
-				status.setIcon(player3_icon);
-				break;
-			case "Player4":
-				status.setIcon(player4_icon);
-				break;
-			default:
-				break;
-			}
-		}
-		if (game.currentPlayer().getFreeze()) {
-			status.setText(currentPlayerName + "'s still FREEZE!");
-		}
-		if (!squareType.equals("Square")) {
-			switch (squareType) {
-			case "Backward":
-				status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
-				break;
-			case "Freeze":
-				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
-			default:
-				status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
-				break;
-			}
-		} else {
-			status.setText(currentPlayerName + " goes to " + currentPosition);
-		}
-		status.setHorizontalTextPosition(JLabel.CENTER);
-		status.setVerticalTextPosition(JLabel.BOTTOM);
-	}
+//	public void updateStatus() {
+//		String squareType = game.getSquareType();
+//		String currentPlayerName = game.getPreviousPlayerName();
+//		int currentPosition = game.getPreviousPosition();
+//		if (game.currentPlayersWins()) {
+//			status.setText(currentPlayerName + "WINS!");
+//			switch (currentPlayerName) {
+//			case "Player1":
+//				status.setIcon(player1_icon);
+//				break;
+//			case "Player2":
+//				status.setIcon(player2_icon);
+//				break;
+//			case "Player3":
+//				status.setIcon(player3_icon);
+//				break;
+//			case "Player4":
+//				status.setIcon(player4_icon);
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//		if (game.currentPlayer().getFreeze()) {
+//			status.setText(currentPlayerName + "'s still FREEZE!");
+//		}
+//		if (!squareType.equals("Square")) {
+//			switch (squareType) {
+//			case "Backward":
+//				status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
+//				break;
+//			case "Freeze":
+//				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
+//			default:
+//				status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
+//				break;
+//			}
+//		} else {
+//			status.setText(currentPlayerName + " goes to " + currentPosition);
+//		}
+//		status.setHorizontalTextPosition(JLabel.CENTER);
+//		status.setVerticalTextPosition(JLabel.BOTTOM);
+//	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		move(game.getInitialPosition());
-		updateCurrentPlayer();
-		updateStatus();
+//		updateCurrentPlayer();
+//		updateStatus();
 
 	}
 
 	public void move(int initialPos) {
 		JLabel current = getPlayerPin();
-		if (game.getBackward()) {
-			moveBackwards(initialPos, current);
+		if(game.isMoveEnd()) {
+			die.setEnabled(true);
 		} else {
-			moveForward(initialPos - 1, current);
+			if (game.getBackward()) {
+				moveBackwards(initialPos, current);
+			} else {
+				moveForward(initialPos - 1, current);
+			}
 		}
 	}
 
