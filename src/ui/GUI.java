@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import javax.swing.BoxLayout;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import game.Game;
+import square.Square;
 
 public class GUI implements Observer {
 
@@ -367,6 +369,9 @@ public class GUI implements Observer {
 		Timer timer = new Timer(500, new ActionListener() {
 			int i = 0;
 			int position = initialPos;
+			int squareNum = game.getSquare()[position].getNumber();
+			int squareStep = game.getSquare()[position].getSteps();
+			int lastPos = squareNum + squareStep;
 			
 			@Override
 			public synchronized void actionPerformed(ActionEvent event) {
@@ -383,7 +388,9 @@ public class GUI implements Observer {
 					((Timer) event.getSource()).stop();
 					sleep(500);
 					game.moveSpecial();
-					die.setEnabled(true);
+					if (position == lastPos || !game.hasMove()) {
+						die.setEnabled(true);
+					}
 				}
 			}
 		});

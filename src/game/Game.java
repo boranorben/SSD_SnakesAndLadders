@@ -20,6 +20,7 @@ public class Game extends Observable {
 	private int steps;
 	private int initialPosition = 0;
 	private Player previousPlayer;
+	private boolean hasMove = false;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private List<Replay> tmp;
@@ -65,6 +66,7 @@ public class Game extends Observable {
 	}
 
 	public void gameLogic(int steps) {
+		setMove(false);
 		System.out.println("--------------------------------");
 		if (!currentPlayer().getFreeze()) {
 			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
@@ -135,12 +137,13 @@ public class Game extends Observable {
 		replay.add(new Replay(currentPlayer(), steps));
 		setChanged();
 		notifyObservers();
-
 	}
 
 	public void moveSpecial() {
+		
 		Square previousSquare = board.getSquare()[board.getPeicePosition(previousPlayer.getPiece())];
 		if (previousSquare instanceof SnakeSquare || previousSquare instanceof LadderSquare) {
+			setMove(true);
 			this.initialPosition = previousSquare.getNumber();
 			this.previousPlayer.movePiece(board, previousSquare.getSteps());
 			this.steps = previousSquare.getSteps();
@@ -148,6 +151,14 @@ public class Game extends Observable {
 			setChanged();
 			notifyObservers();
 		}
+	}
+	
+	public void setMove(boolean move) {
+		this.hasMove = move;
+	}
+	
+	public boolean hasMove() {
+		return this.hasMove;
 	}
 
 	public Square[] getSquare() {
