@@ -23,6 +23,7 @@ public class Game extends Observable {
 	private int initialPosition = 0;
 	private Player previousPlayer;
 	private boolean hasMove = false;
+	private boolean isMoveEnd = false;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private boolean replayMode;
@@ -70,6 +71,7 @@ public class Game extends Observable {
 
 	public synchronized void gameLogic(int newSteps) {
 		setMove(false);
+		isMoveEnd = false;
 		System.out.println("--------------------------------");
 		if (!currentPlayer().getFreeze()) {
 			if (getBackward()) {
@@ -132,13 +134,17 @@ public class Game extends Observable {
 						System.out.println(currentPlayerName() + " Freeze!");
 						setFreeze();
 					}
-
+					
+					setMove(true);
+					isMoveEnd = true;
+					setChanged();
+					notifyObservers();
+					
 					if (!hasBackward()) {
 						switchPlayer();
 					} else {
 						backwards = true;
 					}
-
 				}
 			});
 			thread.start();
@@ -148,6 +154,10 @@ public class Game extends Observable {
 			System.out.println(currentPlayerName() + "'s win!");
 			end();
 		}
+	}
+	
+	public boolean isMoveEnd() {
+		return this.isMoveEnd;
 	}
 
 	public void doReplay() {
