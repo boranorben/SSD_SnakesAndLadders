@@ -188,8 +188,9 @@ public class Game extends Observable {
 				for (int i = 0; i < size; i++) {
 					gameLogic(tmp.get(0).getSteps());
 					tmp = tmp.subList(1, tmp.size());
-					while(!replayCheck) { }
+					while(!replayCheck) { System.out.print(""); }
 				}
+				replayMode = false;
 			}
 		});
 		replayThread.start();

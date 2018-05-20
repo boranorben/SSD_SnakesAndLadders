@@ -349,12 +349,7 @@ public class GUI implements Observer {
 				break;
 			}
 		} else {
-			currentPosition = game.currentPlayerPosition();
-			status.setText(currentPlayerName + " is now at " + currentPosition);
-			if (!game.isMoveEnd()) {
-				int pos = currentPosition + diceFace;
-				status.setText(currentPlayerName + " goes to " + pos);
-			}
+			status.setText(currentPlayerName + " goes to " + diceFace);
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
 		status.setVerticalTextPosition(JLabel.BOTTOM);
