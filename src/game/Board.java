@@ -30,12 +30,7 @@ public class Board {
 	public void movePiece(Piece piece, int steps) {
 		int pos = getPeicePosition(piece);
 		this.squares[pos].removePiece(piece);
-		int newPos = 0;
-		if (squares[pos] instanceof BackwardSquare) {
-			newPos = pos - steps;
-		} else {
-			newPos = pos + steps;
-		}
+		int newPos = pos + steps;
 		if (newPos >= squares.length) {
 			newPos = squares.length - 1;
 		}

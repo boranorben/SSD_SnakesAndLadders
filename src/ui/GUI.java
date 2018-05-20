@@ -220,6 +220,9 @@ public class GUI implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				for (JLabel player : players) {
+					player.setLocation(-50, 450);
+				}
 				game.showReplay();
 			}
 		});
@@ -256,8 +259,7 @@ public class GUI implements Observer {
 	}
 
 	public JLabel getPlayerPin() {
-		String currentPlayerName = game.getPreviousPlayer().getName();
-		switch (currentPlayerName) {
+		switch (game.currentPlayerName()) {
 		case "Player1":
 			return players.get(0);
 		case "Player2":
@@ -355,50 +357,26 @@ public class GUI implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		move(game.getSteps(), game.getInitialPosition());
+		move(game.getInitialPosition());
 		updateCurrentPlayer();
 		updateStatus();
 
 	}
 
-	public void move(int steps, int initialPos) {
+	public void move(int initialPos) {
 		JLabel current = getPlayerPin();
-		Timer timer = new Timer(500, new ActionListener() {
-			int i = 0;
-			int position = initialPos;
-			int squareNum = game.getSquare()[position].getNumber();
-			int squareStep = game.getSquare()[position].getSteps();
-			int lastPos = squareNum + squareStep;
-			
-			@Override
-			public synchronized void actionPerformed(ActionEvent event) {
-				System.out.println("position: " + position);
-				if (i < Math.abs(steps)) {
-					if (steps > 0) {
-						moveForward(position, current);
-					} else {
-						moveBackwards(position, current);
-					}
-					position += Integer.signum(steps);
-					i++;
-				} else {
-					((Timer) event.getSource()).stop();
-					sleep(500);
-					game.moveSpecial();
-					if (position == lastPos || !game.hasMove()) {
-						die.setEnabled(true);
-					}
-				}
-			}
-		});
-		timer.start();
+		if (game.getBackward()) {
+			moveBackwards(initialPos, current);
+		} else {
+			moveForward(initialPos - 1, current);
+		}
 	}
 
 	public void moveForward(int position, JLabel currentLabel) {
 		if (position % 10 == 0 && position != 0) {
-			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()-50);
+			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY() - 50);
 		} else {
-			if ((position/10) % 2 == 0) {
+			if ((position / 10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
 			} else {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
@@ -407,17 +385,17 @@ public class GUI implements Observer {
 	}
 
 	public void moveBackwards(int position, JLabel currentLabel) {
-		if ((position - 1) % 10 == 0 && position != 0) {
-			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY()+50);
+		if (position % 10 == 0 && position != 0) {
+			currentLabel.setLocation(currentLabel.getX(), currentLabel.getY() + 50);
 		} else {
-			if (((position - 1)/10) % 2 == 0) {
+			if ((position / 10) % 2 == 0) {
 				currentLabel.setLocation(currentLabel.getX() - 50, currentLabel.getY());
 			} else {
 				currentLabel.setLocation(currentLabel.getX() + 50, currentLabel.getY());
 			}
 		}
 	}
-	
+
 	public void sleep(int mSecs) {
 		try {
 			Thread.sleep(mSecs);
