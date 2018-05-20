@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.*;
 
 import javax.swing.BoxLayout;
@@ -22,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import game.Game;
-import square.Square;
 
 public class GUI implements Observer {
 
@@ -204,8 +202,7 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-					game.gameLogic(diceFace);	
-//					move(game.getSteps(), game.getInitialPosition());
+					game.gameLogic(diceFace);
 				}
 
 			}

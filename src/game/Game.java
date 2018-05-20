@@ -67,17 +67,17 @@ public class Game extends Observable {
 
 	public void gameLogic(int steps) {
 		setMove(false);
-		System.out.println("--------------------------------");
+		System.out.println(currentPlayerName() + ": freeze? " + currentPlayer().getFreeze());
+		System.out.println(nextPlayer().getName() + ": freeze? " + nextPlayer().getFreeze());
 		if (!currentPlayer().getFreeze()) {
-			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-			System.out.println("Dice faces: " + steps);
 			currentPlayerMovePiece(steps);
-			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
 			if (hasFreeze()) {
 				System.out.println(currentPlayerName() + " Freeze!");
 				setFreeze();
 			}
-			// moveSpecial();
+		} else if (currentPlayer().getFreeze() && !nextPlayer().getFreeze()) {
+			switchPlayer();
+			currentPlayerMovePiece(steps);
 		}
 		if (currentPlayersWins()) {
 			System.out.println(currentPlayerName() + "'s win!");
@@ -104,9 +104,7 @@ public class Game extends Observable {
 	}
 
 	public void setFreeze() {
-		if (hasFreeze()) {
-			players[currentPlayerIndex].setFreeze(true);
-		}
+		players[currentPlayerIndex].setFreeze(true);
 	}
 
 	public boolean isEnded() {
@@ -140,7 +138,6 @@ public class Game extends Observable {
 	}
 
 	public void moveSpecial() {
-		
 		Square previousSquare = board.getSquare()[board.getPeicePosition(previousPlayer.getPiece())];
 		if (previousSquare instanceof SnakeSquare || previousSquare instanceof LadderSquare) {
 			setMove(true);
@@ -183,7 +180,7 @@ public class Game extends Observable {
 
 	public void switchPlayer() {
 		int tmp = (currentPlayerIndex + 1) % players.length;
-		if (players[tmp].getFreeze() == true) {
+		if (players[tmp].getFreeze()) {
 			players[tmp].setFreeze(false);
 		} else {
 			currentPlayerIndex = tmp;

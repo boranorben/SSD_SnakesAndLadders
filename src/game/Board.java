@@ -71,7 +71,6 @@ public class Board {
 		}
 	}
 
-	// method for checking the square's type
 	public Square[] getSquare() {
 		return this.squares;
 	}
