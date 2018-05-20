@@ -134,7 +134,7 @@ public class GUI implements Observer {
 		gameFrame.pack();
 		homeFrame.pack();
 
-//		updateCurrentPlayer();
+		// updateCurrentPlayer();
 
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -202,6 +202,7 @@ public class GUI implements Observer {
 					}
 					die.setEnabled(false);
 					game.gameLogic(diceFace);
+
 				}
 
 			}
@@ -354,7 +355,6 @@ public class GUI implements Observer {
 		status.setVerticalTextPosition(JLabel.BOTTOM);
 	}
 
-
 	@Override
 	public void update(Observable o, Object arg) {
 		move(game.getInitialPosition());
@@ -365,7 +365,7 @@ public class GUI implements Observer {
 
 	public void move(int initialPos) {
 		JLabel current = getPlayerPin();
-		if(game.isMoveEnd()) {
+		if (game.isMoveEnd()) {
 			die.setEnabled(true);
 		} else {
 			if (game.getBackward()) {

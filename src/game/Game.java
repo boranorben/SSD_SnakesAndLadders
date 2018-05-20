@@ -18,12 +18,13 @@ public class Game extends Observable {
 	private int currentPlayerIndex = 0;
 	private boolean ended;
 	private int steps;
-	private Thread thread;
+	private Thread moveThread;
+	private Thread replayThread;
 	private boolean backwards = false;
 	private int initialPosition = 0;
-	private Player previousPlayer;
 	private boolean hasMove = false;
 	private boolean isMoveEnd = false;
+	private boolean replayCheck = false;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private boolean replayMode;
@@ -69,9 +70,24 @@ public class Game extends Observable {
 		}
 	}
 
+	public void reset() {
+		currentPlayerIndex = 0;
+		die = new Die();
+		board = new Board();
+		ended = false;
+		replayMode = false;
+
+		for (int i = 0; i < players.length; i++) {
+			players[i] = new Player("P" + (i + 1));
+			board.addPiece(players[i].getPiece(), 0);
+		}
+		createSpecial();
+	}
+
 	public synchronized void gameLogic(int newSteps) {
 		setMove(false);
 		isMoveEnd = false;
+		replayCheck = false;
 		System.out.println("--------------------------------");
 		if (!currentPlayer().getFreeze()) {
 			if (getBackward()) {
@@ -80,11 +96,13 @@ public class Game extends Observable {
 				this.steps = newSteps;
 			}
 			initialPosition = currentPlayerPosition();
-			thread = new Thread(new Runnable() {
+			moveThread = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					replay.add(new Replay(currentPlayer(), steps));
+					if (!replayMode) {
+						replay.add(new Replay(currentPlayer(), newSteps));
+					}
 					if (getBackward()) {
 						for (int i = steps; i < 0; i++) {
 							initialPosition--;
@@ -115,7 +133,6 @@ public class Game extends Observable {
 							notifyObservers();
 							waitFor(500);
 						}
-						replay.add(new Replay(currentPlayer(), getSpecialSteps()));
 					} else if (hasSnake()) {
 						backwards = true;
 						for (int i = getSpecialSteps(); i < 0; i++) {
@@ -125,7 +142,6 @@ public class Game extends Observable {
 							waitFor(500);
 						}
 						backwards = false;
-						replay.add(new Replay(currentPlayer(), getSpecialSteps()));
 					}
 
 					currentPlayer().movePiece(board, getSpecialSteps());
@@ -134,20 +150,21 @@ public class Game extends Observable {
 						System.out.println(currentPlayerName() + " Freeze!");
 						setFreeze();
 					}
-					
+
 					setMove(true);
 					isMoveEnd = true;
 					setChanged();
 					notifyObservers();
-					
+
 					if (!hasBackward()) {
 						switchPlayer();
 					} else {
 						backwards = true;
 					}
+					replayCheck = true;
 				}
 			});
-			thread.start();
+			moveThread.start();
 
 		}
 		if (currentPlayersWins()) {
@@ -155,14 +172,36 @@ public class Game extends Observable {
 			end();
 		}
 	}
-	
+
 	public boolean isMoveEnd() {
 		return this.isMoveEnd;
 	}
 
 	public void doReplay() {
-		for (int i = 0; i < tmp.size(); i++) {
+		replayMode = true;
+		initPlayers(players.length);
+		int size = tmp.size();
+		replayThread = new Thread(new Runnable() {
 
+			@Override
+			public void run() {
+				for (int i = 0; i < size; i++) {
+					gameLogic(tmp.get(0).getSteps());
+					tmp = tmp.subList(1, tmp.size());
+					while(!replayCheck) { }
+				}
+			}
+		});
+		replayThread.start();
+	}
+	public void notifyT() {
+		replayThread.start();
+	}
+	
+	public void sleepT() {
+		try {
+			replayThread.wait();
+		} catch (InterruptedException e) {
 		}
 	}
 
@@ -224,8 +263,8 @@ public class Game extends Observable {
 		return this.backwards;
 	}
 
-	public void setReplayMode() {
-		this.replayMode = true;
+	public boolean getReplayMode() {
+		return this.replayMode;
 	}
 
 	public Square[] getSquare() {
@@ -246,7 +285,7 @@ public class Game extends Observable {
 
 	public void end() {
 		ended = true;
-	};
+	}
 
 	public void switchPlayer() {
 		int tmp = (currentPlayerIndex + 1) % players.length;
@@ -255,7 +294,7 @@ public class Game extends Observable {
 		} else {
 			currentPlayerIndex = tmp;
 		}
-	};
+	}
 
 	public boolean hasSnake() {
 		return board.hasSpecialSquare("Snake", currentPlayerPosition());
@@ -282,9 +321,7 @@ public class Game extends Observable {
 	}
 
 	public void showReplay() {
-		for (Player player : players) {
-			board.restartPiece(player.getPiece());
-		}
+		reset();
 		setTmp(this.replay);
 		doReplay();
 	}
