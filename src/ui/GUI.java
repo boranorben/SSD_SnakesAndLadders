@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import game.Game;
 
@@ -283,8 +282,8 @@ public class GUI implements Observer {
 			currentPlayer.setIcon(player1_icon);
 			currentPlayer.setText("Current Player: Player 1");
 		} else {
-			String currentPlayerName = game.getPreviousPlayerName();
-			if (game.currentPlayersWins() || game.getSquareType().equals("Backward")) {
+			String currentPlayerName = game.currentPlayerName();
+			if (game.currentPlayersWins() || game.hasBackward()) {
 				currentPlayer.setIcon(getPlayerPin().getIcon());
 				currentPlayer.setText("");
 			} else if (!game.currentPlayer().getFreeze()) {
@@ -313,8 +312,8 @@ public class GUI implements Observer {
 
 	public void updateStatus() {
 		String squareType = game.getSquareType();
-		String currentPlayerName = game.getPreviousPlayerName();
-		int currentPosition = game.getPreviousPosition();
+		String currentPlayerName = game.currentPlayerName();
+		int currentPosition = game.currentPlayerPosition();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
 			switch (currentPlayerName) {

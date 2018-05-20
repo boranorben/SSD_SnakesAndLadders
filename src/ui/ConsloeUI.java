@@ -17,7 +17,7 @@ public class ConsloeUI {
 			scanner.nextLine();
 			int face = game.currentPlayerRollDice();
 			System.out.println("Dice face = " + face);
-			game.currentPlayerMovePiece(face);
+//			game.currentPlayerMovePiece(face);
 //			game.setFreeze(game.currentPlayerPosition());
 			System.out.println("Position: " + game.currentPlayerPosition());
 			// check if the current player are on special square

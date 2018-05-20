@@ -218,10 +218,6 @@ public class Game extends Observable {
 		this.replayMode = true;
 	}
 
-	public int getPreviousPosition() {
-		return board.getSquare()[this.steps].getNumber();
-	}
-
 	public Square[] getSquare() {
 		return this.board.getSquare();
 	}
@@ -312,13 +308,5 @@ public class Game extends Observable {
 
 	public void switchPlayerPieceFace() {
 		currentPlayer().getPiece().switchFace();
-	}
-
-	public Player getPreviousPlayer() {
-		return this.previousPlayer;
-	}
-
-	public String getPreviousPlayerName() {
-		return getPreviousPlayer().getName();
 	}
 }
