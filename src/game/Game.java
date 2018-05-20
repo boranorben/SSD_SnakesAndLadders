@@ -15,13 +15,16 @@ public class Game extends Observable {
 	private Player[] players;
 	private Die die;
 	private Board board;
-	private int currentPlayerIndex;
+	private int currentPlayerIndex = 0;
 	private boolean ended;
 	private int steps;
+	private Thread thread;
+	private boolean backwards = false;
 	private int initialPosition = 0;
 	private Player previousPlayer;
 
 	private List<Replay> replay = new ArrayList<Replay>();
+	private boolean replayMode;
 	private List<Replay> tmp;
 
 	public Game() {
@@ -64,26 +67,90 @@ public class Game extends Observable {
 		}
 	}
 
-	public void gameLogic(int steps) {
+	public synchronized void gameLogic(int newSteps) {
 		System.out.println("--------------------------------");
 		if (!currentPlayer().getFreeze()) {
-			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-			System.out.println("Dice faces: " + steps);
-			currentPlayerMovePiece(steps);
-			System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-			if (hasFreeze()) {
-				System.out.println(currentPlayerName() + " Freeze!");
-				setFreeze();
+			if (getBackward()) {
+				this.steps = -newSteps;
+			} else {
+				this.steps = newSteps;
 			}
-			// moveSpecial();
+			initialPosition = currentPlayerPosition();
+			thread = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					replay.add(new Replay(currentPlayer(), steps));
+					if(getBackward()) {
+						for (int i = steps; i < 0; i++) {
+							initialPosition--;
+							setChanged();
+							notifyObservers();
+							waitFor(500);
+						}
+						backwards = false;
+					} else {
+						for (int i = 0; i < newSteps; i++) {
+							initialPosition++;
+							setChanged();
+							notifyObservers();
+							waitFor(500);
+						}
+					}
+					
+					currentPlayer().movePiece(board, steps);
+					waitFor(800);
+					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
+					System.out.println("Dice faces: " + steps);
+					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
+
+					if (hasLadder()) {
+						for (int i = 0; i < getSpecialSteps(); i++) {
+							initialPosition++;
+							setChanged();
+							notifyObservers();
+							waitFor(500);
+						}
+						replay.add(new Replay(currentPlayer(), getSpecialSteps()));
+					} else if (hasSnake()) {
+						backwards = true;
+						for (int i = getSpecialSteps(); i < 0; i++) {
+							initialPosition--;
+							setChanged();
+							notifyObservers();
+							waitFor(500);
+						}
+						backwards = false;
+						replay.add(new Replay(currentPlayer(), getSpecialSteps()));
+					}
+					
+					currentPlayer().movePiece(board, getSpecialSteps());
+
+					if (hasFreeze()) {
+						System.out.println(currentPlayerName() + " Freeze!");
+						setFreeze();
+					}
+
+					if (!hasBackward()) {
+						switchPlayer();
+					} else {
+						backwards = true;
+					}
+
+				}
+			});
+			thread.start();
+
 		}
 		if (currentPlayersWins()) {
 			System.out.println(currentPlayerName() + "'s win!");
 			end();
-		} else {
-			if (!hasBackward()) {
-				switchPlayer();
-			}
+		}
+	}
+	
+	public void doReplay() {
+		for(int i = 0; i < tmp.size(); i++) {
+			
 		}
 	}
 
@@ -123,31 +190,24 @@ public class Game extends Observable {
 		return currentPlayer().roll(die);
 	}
 
-	public void currentPlayerMovePiece(int steps) {
-		previousPlayer = currentPlayer();
-		if (getSquareType().equals("Backward")) {
-			this.steps = -steps;
-		} else {
-			this.steps = steps;
+	private void waitFor(long delayed) {
+		try {
+			Thread.sleep(delayed);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		this.initialPosition = currentPlayerPosition();
-		currentPlayer().movePiece(board, steps);
-		replay.add(new Replay(currentPlayer(), steps));
-		setChanged();
-		notifyObservers();
-
 	}
 
-	public void moveSpecial() {
-		Square previousSquare = board.getSquare()[board.getPeicePosition(previousPlayer.getPiece())];
-		if (previousSquare instanceof SnakeSquare || previousSquare instanceof LadderSquare) {
-			this.initialPosition = previousSquare.getNumber();
-			this.previousPlayer.movePiece(board, previousSquare.getSteps());
-			this.steps = previousSquare.getSteps();
-			replay.add(new Replay(this.previousPlayer, previousSquare.getSteps()));
-			setChanged();
-			notifyObservers();
-		}
+	public int getSpecialSteps() {
+		return getSquare()[currentPlayerPosition()].getSteps();
+	}
+
+	public boolean getBackward() {
+		return this.backwards;
+	}
+
+	public void setReplayMode() {
+		this.replayMode = true;
 	}
 
 	public int getPreviousPosition() {
@@ -216,26 +276,14 @@ public class Game extends Observable {
 			board.restartPiece(player.getPiece());
 		}
 		setTmp(this.replay);
-		doReplay(this.tmp);
+		doReplay();
 	}
 
 	public void setTmp(List<Replay> tmp) {
 		this.tmp = tmp;
 	}
 
-	public void doReplay(List<Replay> tmp) {
-		if (tmp.size() == 0) {
-			return;
-		}
-		tmp.get(0).getPlayer().movePiece(board, tmp.get(0).getSteps());
-		if (tmp.size() == 1) {
-			tmp = new ArrayList<Replay>();
-			return;
-		} else {
-			tmp = tmp.subList(1, tmp.size());
-			doReplay(tmp);
-		}
-	}
+	
 
 	public int getSteps() {
 		return this.steps;
