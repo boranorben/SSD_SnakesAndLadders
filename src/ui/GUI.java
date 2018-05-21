@@ -19,28 +19,33 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import game.Game;
 
 public class GUI implements Observer {
 
 	private Game game;
-	private JFrame homeFrame, gameFrame;
+	private JFrame homeFrame, gameFrame, searchFrame, waitingFrame;
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
-			player4_Pin;
+			player4_Pin, searchLabel, searchPic, waitingLabel, waitingPic;
 	private List<JLabel> players = new ArrayList<JLabel>();
-	private JButton player2_Button, player3_Button, player4_Button ,online_Button, die, restartButton, replayButton;
+	private JButton player2_Button, player3_Button, player4_Button ,online_Button, die, restartButton, replayButton,
+			serachButton, cancelButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
+	private JTextField portField;
 	private int diceFace = 0;
 
 	public GUI(Game game) {
 		this.game = game;
-		homeFrame = new JFrame("Snakes and Ladders Game");
-		gameFrame = new JFrame("Snakes and Ladders Game");
-		homeFrame.setResizable(false);
-		gameFrame.setResizable(false);
-		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		homeFrame = new JFrame("Snakes and Ladders - HOME");
+		gameFrame = new JFrame("Snakes and Ladders - GAME");
+		searchFrame = new JFrame("Snakes and Ladders - SEARCH FOR ONLINE");
+		waitingFrame = new JFrame("Snakes and Ladders - WAITING FOR PLAYERS");
+		initFrame(homeFrame);
+		initFrame(gameFrame);
+		initFrame(searchFrame);
+		initFrame(waitingFrame);
 		initComponent();
 		game.addObserver(this);
 	}
@@ -52,6 +57,11 @@ public class GUI implements Observer {
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
 		status = new JLabel("Waiting for roling the dice...");
 		currentPlayer = new JLabel();
+		
+		searchLabel = new JLabel("Enter port number");
+		waitingLabel = new JLabel("Waiting for players");
+		searchPic  = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
+		waitingPic = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
 
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
 		player2_icon = new ImageIcon(getClass().getResource("./../images/player2.png"));
@@ -63,8 +73,10 @@ public class GUI implements Observer {
 		player3_Pin = new JLabel(player3_icon);
 		player4_Pin = new JLabel(player4_icon);
 
-		setFont(status);
-		setFont(currentPlayer);
+		setFont(status, 12f);
+		setFont(currentPlayer, 12f);
+		setFont(searchLabel, 28f);
+		setFont(waitingLabel, 28f);
 
 		player2_Button = new JButton();
 		player3_Button = new JButton();
@@ -73,6 +85,8 @@ public class GUI implements Observer {
 		die = new JButton();
 		restartButton = new JButton();
 		replayButton = new JButton();
+		serachButton = new JButton();
+		cancelButton = new JButton();
 
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
@@ -81,8 +95,12 @@ public class GUI implements Observer {
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
+		serachButton.setIcon(new ImageIcon(getClass().getResource("./../images/search.png")));
+		cancelButton.setIcon(new ImageIcon(getClass().getResource("./../images/cancel.png")));
 		replayButton.setEnabled(false);
-
+		
+		portField = new JTextField("                                       ");
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
@@ -93,6 +111,8 @@ public class GUI implements Observer {
 		setTransparentBackground(die);
 		setTransparentBackground(restartButton);
 		setTransparentBackground(replayButton);
+		setTransparentBackground(serachButton);
+		setTransparentBackground(cancelButton);
 
 		homeFrame.setContentPane(coverPic);
 		homeFrame.setLayout(new GridBagLayout());
@@ -140,9 +160,23 @@ public class GUI implements Observer {
 		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
-
-		gameFrame.pack();
-		homeFrame.pack();
+		
+		gbc.gridheight = GridBagConstraints.CENTER;
+		searchFrame.setContentPane(searchPic);
+		searchFrame.setLayout(new GridBagLayout());
+		searchFrame.add(searchLabel, gbc);
+		searchFrame.add(portField, gbc);
+		searchFrame.add(serachButton, gbc);
+		
+		waitingFrame.setContentPane(waitingPic);
+		waitingFrame.setLayout(new GridBagLayout());
+		waitingFrame.add(waitingLabel, gbc);
+		waitingFrame.add(cancelButton, gbc);
+		
+		endFrame(homeFrame);
+		endFrame(gameFrame);
+		endFrame(searchFrame);
+		endFrame(waitingFrame);
 		
 		player2_Button.addActionListener(new ActionListener() {
 
@@ -181,8 +215,7 @@ public class GUI implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				searchFrame.setVisible(true);
 			}
 		});
 
@@ -243,7 +276,35 @@ public class GUI implements Observer {
 				game.showReplay();
 			}
 		});
-		gameFrame.setVisible(false);
+//		gameFrame.setVisible(false);
+		
+		serachButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				waitingFrame.setVisible(true);
+				searchFrame.setVisible(false);
+			}
+		});
+		
+		cancelButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				searchFrame.setVisible(true);
+				waitingFrame.setVisible(false);
+			}
+		});
+	}
+	
+	public void initFrame(JFrame frame) {
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public void endFrame(JFrame frame) {
+		frame.pack();
+		frame.setLocationRelativeTo(null);
 	}
 
 	public void setVisible() {
@@ -262,11 +323,11 @@ public class GUI implements Observer {
 		game.initPlayers(numPlayers);
 	}
 
-	public void setFont(JLabel label) {
+	public void setFont(JLabel label, float f) {
 		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			Font sizedFont = font.deriveFont(12f);
+			Font sizedFont = font.deriveFont(f);
 			label.setFont(font);
 			label.setFont(sizedFont);
 		} catch (FontFormatException | IOException e) {
