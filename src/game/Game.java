@@ -89,6 +89,7 @@ public class Game extends Observable {
 		isMoveEnd = false;
 		replayCheck = false;
 		System.out.println("--------------------------------");
+		if(isAllFreeze(players)) currentPlayer().setFreeze(false);
 		if (!currentPlayer().getFreeze()) {
 			if (getBackward()) {
 				this.steps = -newSteps;
@@ -198,7 +199,7 @@ public class Game extends Observable {
 	public void notifyT() {
 		replayThread.start();
 	}
-	
+
 	public void sleepT() {
 		try {
 			replayThread.wait();
@@ -356,5 +357,12 @@ public class Game extends Observable {
 
 	public void switchPlayerPieceFace() {
 		currentPlayer().getPiece().switchFace();
+	}
+	
+	public boolean isAllFreeze(Player[] players){
+		for(Player p : players){
+			if(!p.getFreeze()) return false;
+		}
+		return true;
 	}
 }
