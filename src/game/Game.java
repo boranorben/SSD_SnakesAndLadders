@@ -88,11 +88,8 @@ public class Game extends Observable {
 		setMove(false);
 		isMoveEnd = false;
 		replayCheck = false;
-		System.out.println("--------------------------------");
-		if (isAllFreeze(players))
-			currentPlayer().setFreeze(false);
-
-		if (!currentPlayer().getFreeze() && !ended) {
+		System.out.println("-------------------------------- " + currentPlayerName());
+		if (!ended) {
 			if (getBackward()) {
 				this.steps = -newSteps;
 			} else {
@@ -122,7 +119,6 @@ public class Game extends Observable {
 							waitFor(500);
 						}
 					}
-
 					currentPlayer().movePiece(board, steps);
 					waitFor(800);
 					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
@@ -163,20 +159,16 @@ public class Game extends Observable {
 						System.out.println(currentPlayerName() + "'s win!");
 						end();
 					}
-
 					if (!hasBackward()) {
 						switchPlayer();
 					} else {
 						backwards = true;
 					}
 					replayCheck = true;
-
 				}
 			});
 			moveThread.start();
-
 		}
-
 	}
 
 	public boolean isMoveEnd() {
@@ -299,10 +291,10 @@ public class Game extends Observable {
 
 	public void switchPlayer() {
 		int tmp = (currentPlayerIndex + 1) % players.length;
-		if (players[tmp].getFreeze()) {
-			players[tmp].setFreeze(false);
-		} else {
-			currentPlayerIndex = tmp;
+		currentPlayerIndex = tmp;
+		if (currentPlayer().getFreeze()) {
+			currentPlayer().setFreeze(false);
+			switchPlayer();
 		}
 	}
 

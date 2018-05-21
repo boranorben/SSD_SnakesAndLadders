@@ -74,8 +74,7 @@ public class GUI implements Observer {
 
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
-		// player4_Button.setIcon(new
-		// ImageIcon(getClass().getResource("./../images/4Player.png")));
+		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
@@ -108,7 +107,7 @@ public class GUI implements Observer {
 		boardPic.add(player2_Pin);
 		movePlayer(player3_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player3_Pin);
-		movePlayer(player1_Pin, x_initialPos, y_initialPos);
+		movePlayer(player4_Pin, x_initialPos, y_initialPos);
 		boardPic.add(player4_Pin);
 
 		JPanel statusPanel = new JPanel();
@@ -133,9 +132,7 @@ public class GUI implements Observer {
 
 		gameFrame.pack();
 		homeFrame.pack();
-
-		// updateCurrentPlayer();
-
+		
 		player2_Button.addActionListener(new ActionListener() {
 
 			@Override
@@ -202,9 +199,7 @@ public class GUI implements Observer {
 					}
 					die.setEnabled(false);
 					game.gameLogic(diceFace);
-//					game.gameLogic(100);
 				}
-
 			}
 		});
 
@@ -228,7 +223,6 @@ public class GUI implements Observer {
 				game.showReplay();
 			}
 		});
-
 		gameFrame.setVisible(false);
 	}
 
