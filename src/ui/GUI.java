@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,7 +29,7 @@ public class GUI implements Observer {
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
 			player4_Pin;
 	private List<JLabel> players = new ArrayList<JLabel>();
-	private JButton player2_Button, player3_Button, player4_Button, die, restartButton, replayButton;
+	private JButton player2_Button, player3_Button, player4_Button ,online_Button, die, restartButton, replayButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private int diceFace = 0;
 
@@ -49,7 +50,7 @@ public class GUI implements Observer {
 		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
-		status = new JLabel();
+		status = new JLabel("Waiting for roling the dice...");
 		currentPlayer = new JLabel();
 
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
@@ -68,6 +69,7 @@ public class GUI implements Observer {
 		player2_Button = new JButton();
 		player3_Button = new JButton();
 		player4_Button = new JButton();
+		online_Button = new JButton();
 		die = new JButton();
 		restartButton = new JButton();
 		replayButton = new JButton();
@@ -75,9 +77,11 @@ public class GUI implements Observer {
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
 		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
 		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
+		online_Button.setIcon(new ImageIcon(getClass().getResource("./../images/online.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
+		replayButton.setEnabled(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -85,6 +89,7 @@ public class GUI implements Observer {
 		setTransparentBackground(player2_Button);
 		setTransparentBackground(player3_Button);
 		setTransparentBackground(player4_Button);
+		setTransparentBackground(online_Button);
 		setTransparentBackground(die);
 		setTransparentBackground(restartButton);
 		setTransparentBackground(replayButton);
@@ -94,6 +99,17 @@ public class GUI implements Observer {
 		homeFrame.add(player2_Button, gbc);
 		homeFrame.add(player3_Button, gbc);
 		homeFrame.add(player4_Button, gbc);
+		homeFrame.add(online_Button, gbc);
+		
+		JPanel managerPanel = new JPanel();
+		managerPanel.setLayout(new BoxLayout(managerPanel, BoxLayout.X_AXIS));
+		managerPanel.add(restartButton);
+		managerPanel.add(replayButton);
+		
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridBagLayout());
+		topPanel.add(title, gbc);
+		topPanel.add(managerPanel, gbc);
 
 		JPanel boardPanel = new JPanel();
 		boardPanel.add(boardPic);
@@ -111,30 +127,23 @@ public class GUI implements Observer {
 		boardPic.add(player4_Pin);
 
 		JPanel statusPanel = new JPanel();
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
 		statusPanel.add(currentPlayer);
 		statusPanel.add(status);
-
-		JPanel ManagerPanel = new JPanel();
-		ManagerPanel.setLayout(new BoxLayout(ManagerPanel, BoxLayout.Y_AXIS));
-		ManagerPanel.add(restartButton);
-		ManagerPanel.add(replayButton);
+		statusPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		JPanel controllerPanel = new JPanel();
-		controllerPanel.add(ManagerPanel);
 		controllerPanel.add(die);
 		controllerPanel.add(rollResult);
 		controllerPanel.add(statusPanel);
 
-		gameFrame.add(title, BorderLayout.NORTH);
+		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
 
 		gameFrame.pack();
 		homeFrame.pack();
-
-		// updateCurrentPlayer();
-
+		
 		player2_Button.addActionListener(new ActionListener() {
 
 			@Override
@@ -165,6 +174,15 @@ public class GUI implements Observer {
 				players.add(player2_Pin);
 				players.add(player3_Pin);
 				players.add(player4_Pin);
+			}
+		});
+		
+		online_Button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
@@ -202,7 +220,6 @@ public class GUI implements Observer {
 					die.setEnabled(false);
 					game.gameLogic(diceFace);
 				}
-
 			}
 		});
 
@@ -210,6 +227,8 @@ public class GUI implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				new GUI(new Game()).setVisible();
+				gameFrame.setVisible(false);
 				game.restartGame();
 			}
 		});
@@ -224,7 +243,6 @@ public class GUI implements Observer {
 				game.showReplay();
 			}
 		});
-
 		gameFrame.setVisible(false);
 	}
 
@@ -315,44 +333,30 @@ public class GUI implements Observer {
 		int currentPosition = game.currentPlayerPosition();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
-			switch (currentPlayerName) {
-			case "Player1":
-				status.setIcon(player1_icon);
-				break;
-			case "Player2":
-				status.setIcon(player2_icon);
-				break;
-			case "Player3":
-				status.setIcon(player3_icon);
-				break;
-			case "Player4":
-				status.setIcon(player4_icon);
-				break;
-			default:
-				break;
-			}
-		}
-		if (game.currentPlayer().getFreeze()) {
-			status.setText(currentPlayerName + "'s still FREEZE!");
-		}
-		if (!squareType.equals("Square")) {
-			switch (squareType) {
-			case "Backward":
-				status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
-				break;
-			case "Freeze":
-				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
-			default:
-				status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
-				break;
-			}
+			replayButton.setEnabled(true);
 		} else {
-			status.setText(currentPlayerName + " goes to " + diceFace);
-			currentPosition = game.currentPlayerPosition();
-			status.setText(currentPlayerName + " is now at " + currentPosition);
-			if (!game.isMoveEnd()) {
-				int pos = currentPosition + diceFace;
-				status.setText(currentPlayerName + " goes to " + pos);
+			if (game.currentPlayer().getFreeze()) {
+				status.setText(currentPlayerName + "'s still FREEZE!");
+			}
+			if (!squareType.equals("Square")) {
+				switch (squareType) {
+				case "Backward":
+					status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
+					break;
+				case "Freeze":
+					status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
+				default:
+					status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
+					break;
+				}
+			} else {
+				status.setText(currentPlayerName + " goes to " + diceFace);
+				currentPosition = game.currentPlayerPosition();
+				status.setText(currentPlayerName + " is now at " + currentPosition);
+				if (!game.isMoveEnd()) {
+					int pos = currentPosition + diceFace;
+					status.setText(currentPlayerName + " goes to " + pos);
+				}
 			}
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
