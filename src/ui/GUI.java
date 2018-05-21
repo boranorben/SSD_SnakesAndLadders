@@ -201,8 +201,8 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-					game.gameLogic(diceFace);
-
+//					game.gameLogic(diceFace);
+					game.gameLogic(100);
 				}
 
 			}

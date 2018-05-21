@@ -89,7 +89,7 @@ public class Game extends Observable {
 		isMoveEnd = false;
 		replayCheck = false;
 		System.out.println("--------------------------------");
-		if (!currentPlayer().getFreeze()) {
+		if (!currentPlayer().getFreeze() && !ended) {
 			if (getBackward()) {
 				this.steps = -newSteps;
 			} else {
@@ -155,6 +155,11 @@ public class Game extends Observable {
 					isMoveEnd = true;
 					setChanged();
 					notifyObservers();
+					
+					if (currentPlayersWins()) {
+						System.out.println(currentPlayerName() + "'s win!");
+						end();
+					}	
 
 					if (!hasBackward()) {
 						switchPlayer();
@@ -162,15 +167,14 @@ public class Game extends Observable {
 						backwards = true;
 					}
 					replayCheck = true;
+					
+					
 				}
 			});
 			moveThread.start();
 
 		}
-		if (currentPlayersWins()) {
-			System.out.println(currentPlayerName() + "'s win!");
-			end();
-		}
+		
 	}
 
 	public boolean isMoveEnd() {
