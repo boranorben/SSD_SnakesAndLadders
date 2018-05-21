@@ -201,8 +201,8 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-//					game.gameLogic(diceFace);
-					game.gameLogic(100);
+					game.gameLogic(diceFace);
+//					game.gameLogic(100);
 				}
 
 			}
@@ -212,6 +212,8 @@ public class GUI implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				new GUI(new Game()).setVisible();
+				gameFrame.setVisible(false);
 				game.restartGame();
 			}
 		});
@@ -317,44 +319,29 @@ public class GUI implements Observer {
 		int currentPosition = game.currentPlayerPosition();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
-			switch (currentPlayerName) {
-			case "Player1":
-				status.setIcon(player1_icon);
-				break;
-			case "Player2":
-				status.setIcon(player2_icon);
-				break;
-			case "Player3":
-				status.setIcon(player3_icon);
-				break;
-			case "Player4":
-				status.setIcon(player4_icon);
-				break;
-			default:
-				break;
-			}
-		}
-		if (game.currentPlayer().getFreeze()) {
-			status.setText(currentPlayerName + "'s still FREEZE!");
-		}
-		if (!squareType.equals("Square")) {
-			switch (squareType) {
-			case "Backward":
-				status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
-				break;
-			case "Freeze":
-				status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
-			default:
-				status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
-				break;
-			}
 		} else {
-			status.setText(currentPlayerName + " goes to " + diceFace);
-			currentPosition = game.currentPlayerPosition();
-			status.setText(currentPlayerName + " is now at " + currentPosition);
-			if (!game.isMoveEnd()) {
-				int pos = currentPosition + diceFace;
-				status.setText(currentPlayerName + " goes to " + pos);
+			if (game.currentPlayer().getFreeze()) {
+				status.setText(currentPlayerName + "'s still FREEZE!");
+			}
+			if (!squareType.equals("Square")) {
+				switch (squareType) {
+				case "Backward":
+					status.setText("<html>" + currentPlayerName + " founds Backward<br>Roll and move backward!</html>");
+					break;
+				case "Freeze":
+					status.setText(currentPlayerName + " found Freeze, Skip 1 turn!");
+				default:
+					status.setText(currentPlayerName + " founds " + squareType + " at " + currentPosition);
+					break;
+				}
+			} else {
+				status.setText(currentPlayerName + " goes to " + diceFace);
+				currentPosition = game.currentPlayerPosition();
+				status.setText(currentPlayerName + " is now at " + currentPosition);
+				if (!game.isMoveEnd()) {
+					int pos = currentPosition + diceFace;
+					status.setText(currentPlayerName + " goes to " + pos);
+				}
 			}
 		}
 		status.setHorizontalTextPosition(JLabel.CENTER);
