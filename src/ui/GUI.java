@@ -78,6 +78,7 @@ public class GUI implements Observer {
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
+		replayButton.setVisible(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -313,6 +314,7 @@ public class GUI implements Observer {
 		int currentPosition = game.currentPlayerPosition();
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
+			replayButton.setVisible(true);
 		} else {
 			if (game.currentPlayer().getFreeze()) {
 				status.setText(currentPlayerName + "'s still FREEZE!");
