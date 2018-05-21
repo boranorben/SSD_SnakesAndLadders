@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -49,7 +50,7 @@ public class GUI implements Observer {
 		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
 		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
-		status = new JLabel();
+		status = new JLabel("Waiting for roling the dice...");
 		currentPlayer = new JLabel();
 
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
@@ -94,6 +95,16 @@ public class GUI implements Observer {
 		homeFrame.add(player2_Button, gbc);
 		homeFrame.add(player3_Button, gbc);
 		homeFrame.add(player4_Button, gbc);
+		
+		JPanel managerPanel = new JPanel();
+		managerPanel.setLayout(new BoxLayout(managerPanel, BoxLayout.X_AXIS));
+		managerPanel.add(restartButton);
+		managerPanel.add(replayButton);
+		
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridBagLayout());
+		topPanel.add(title, gbc);
+		topPanel.add(managerPanel, gbc);
 
 		JPanel boardPanel = new JPanel();
 		boardPanel.add(boardPic);
@@ -111,22 +122,17 @@ public class GUI implements Observer {
 		boardPic.add(player4_Pin);
 
 		JPanel statusPanel = new JPanel();
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
 		statusPanel.add(currentPlayer);
 		statusPanel.add(status);
-
-		JPanel ManagerPanel = new JPanel();
-		ManagerPanel.setLayout(new BoxLayout(ManagerPanel, BoxLayout.Y_AXIS));
-		ManagerPanel.add(restartButton);
-		ManagerPanel.add(replayButton);
+		statusPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		JPanel controllerPanel = new JPanel();
-		controllerPanel.add(ManagerPanel);
 		controllerPanel.add(die);
 		controllerPanel.add(rollResult);
 		controllerPanel.add(statusPanel);
 
-		gameFrame.add(title, BorderLayout.NORTH);
+		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
 
