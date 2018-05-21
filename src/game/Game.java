@@ -89,8 +89,10 @@ public class Game extends Observable {
 		isMoveEnd = false;
 		replayCheck = false;
 		System.out.println("--------------------------------");
-		if(isAllFreeze(players)) currentPlayer().setFreeze(false);
-		if (!currentPlayer().getFreeze()) {
+		if (isAllFreeze(players))
+			currentPlayer().setFreeze(false);
+
+		if (!currentPlayer().getFreeze() && !ended) {
 			if (getBackward()) {
 				this.steps = -newSteps;
 			} else {
@@ -157,21 +159,24 @@ public class Game extends Observable {
 					setChanged();
 					notifyObservers();
 
+					if (currentPlayersWins()) {
+						System.out.println(currentPlayerName() + "'s win!");
+						end();
+					}
+
 					if (!hasBackward()) {
 						switchPlayer();
 					} else {
 						backwards = true;
 					}
 					replayCheck = true;
+
 				}
 			});
 			moveThread.start();
 
 		}
-		if (currentPlayersWins()) {
-			System.out.println(currentPlayerName() + "'s win!");
-			end();
-		}
+
 	}
 
 	public boolean isMoveEnd() {
@@ -189,13 +194,16 @@ public class Game extends Observable {
 				for (int i = 0; i < size; i++) {
 					gameLogic(tmp.get(0).getSteps());
 					tmp = tmp.subList(1, tmp.size());
-					while(!replayCheck) { System.out.print(""); }
+					while (!replayCheck) {
+						System.out.print("");
+					}
 				}
 				replayMode = false;
 			}
 		});
 		replayThread.start();
 	}
+
 	public void notifyT() {
 		replayThread.start();
 	}
@@ -358,10 +366,11 @@ public class Game extends Observable {
 	public void switchPlayerPieceFace() {
 		currentPlayer().getPiece().switchFace();
 	}
-	
-	public boolean isAllFreeze(Player[] players){
-		for(Player p : players){
-			if(!p.getFreeze()) return false;
+
+	public boolean isAllFreeze(Player[] players) {
+		for (Player p : players) {
+			if (!p.getFreeze())
+				return false;
 		}
 		return true;
 	}
