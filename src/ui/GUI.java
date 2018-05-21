@@ -25,7 +25,7 @@ import game.Game;
 public class GUI implements Observer {
 
 	private Game game;
-	private JFrame homeFrame, gameFrame;
+	private JFrame homeFrame, gameFrame, onlineFrame;
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
 			player4_Pin;
 	private List<JLabel> players = new ArrayList<JLabel>();
@@ -37,10 +37,13 @@ public class GUI implements Observer {
 		this.game = game;
 		homeFrame = new JFrame("Snakes and Ladders Game");
 		gameFrame = new JFrame("Snakes and Ladders Game");
+		onlineFrame = new JFrame("Snakes and Ladders Game");
 		homeFrame.setResizable(false);
 		gameFrame.setResizable(false);
+		onlineFrame.setResizable(false);
 		homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		onlineFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initComponent();
 		game.addObserver(this);
 	}
@@ -140,7 +143,10 @@ public class GUI implements Observer {
 		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
-
+		
+		onlineFrame = gameFrame;
+		
+		onlineFrame.pack();
 		gameFrame.pack();
 		homeFrame.pack();
 		
@@ -181,8 +187,11 @@ public class GUI implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				onlineMode();
+				players.add(player1_Pin);
+				players.add(player2_Pin);
+				players.add(player3_Pin);
+				players.add(player4_Pin);
 			}
 		});
 
@@ -248,6 +257,12 @@ public class GUI implements Observer {
 
 	public void setVisible() {
 		homeFrame.setVisible(true);
+	}
+	
+	public void onlineMode() {
+		homeFrame.setVisible(false);
+		onlineFrame.setVisible(true);
+		game.initPlayers(4);
 	}
 
 	public void setTransparentBackground(JButton button) {
