@@ -338,14 +338,6 @@ public class Game extends Observable {
 		return board.hasSpecialSquare("Backward", currentPlayerPosition());
 	}
 
-	public void currentPlayerFound() {
-		currentPlayer().movePiece(board, board.getSquare()[currentPlayerPosition()].getSteps());
-	}
-
-	public void currentPlayerFound(int backSteps) {
-		currentPlayer().movePiece(board, -backSteps);
-	}
-
 	public void showReplay() {
 		reset();
 		setTmp(this.replay);
@@ -354,10 +346,6 @@ public class Game extends Observable {
 
 	public void setTmp(List<Replay> tmp) {
 		this.tmp = tmp;
-	}
-
-	public int getSteps() {
-		return this.steps;
 	}
 
 	public void restartGame() {
@@ -373,21 +361,5 @@ public class Game extends Observable {
 
 	public int getInitialPosition() {
 		return this.initialPosition;
-	}
-
-	public String getPlayerPieceFace() {
-		return currentPlayer().getPiece().getFace();
-	}
-
-	public void switchPlayerPieceFace() {
-		currentPlayer().getPiece().switchFace();
-	}
-
-	public boolean isAllFreeze(Player[] players) {
-		for (Player p : players) {
-			if (!p.getFreeze())
-				return false;
-		}
-		return true;
 	}
 }
