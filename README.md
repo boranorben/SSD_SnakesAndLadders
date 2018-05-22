@@ -4,6 +4,11 @@
 5910545906 Issaree Srisomboon (`@boranorben`) <br>
 5910546457 Supisara Chuthathumpitak (`@csupisara`)*
 
+## Download
+
+Download Server JAR file [Click Here](https://github.com/boranorben/SSD_SnakesAndLadders/blob/master/Server.jar)
+Download Game JAR file [Click Here](https://github.com/boranorben/SSD_SnakesAndLadders/blob/master/SnakesAndLadders.jar)
+
 ## Features
 
 - The game should ask the number of the players at the start (2 to 4).
