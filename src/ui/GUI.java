@@ -40,8 +40,7 @@ public class GUI implements Observer {
 	private int currentPlayerNumber = 1, playerNumber;
 	private boolean online = false;
 	private GameClient client;
-	private GUI gui = this;
-	int count = 0;
+	private GUI gui;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -56,7 +55,7 @@ public class GUI implements Observer {
 		initFrame(waitingFrame);
 		initFrame(closingFrame);
 		waitingFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		
+		this.gui = this;
 		initComponent();
 		game.addObserver(this);
 	}
@@ -285,15 +284,7 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-					
-					if(count == 0) {
-						game.gameLogic(97);
-					} else if(count == 2){
-						game.gameLogic(7);
-					} else {
-						game.gameLogic(diceFace);
-					}
-					count++;
+					game.gameLogic(diceFace);
 					if (online) {
 						try {
 							client.sendToServer("move " + diceFace);
@@ -309,6 +300,13 @@ public class GUI implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(online) {
+					try {
+						client.sendToServer("disconnect 0");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
 				new GUI(new Game()).setVisible();
 				gameFrame.setVisible(false);
 				game.restartGame();
