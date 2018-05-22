@@ -17,7 +17,6 @@ public class Player {
 	}
 	
 	public void movePiece(Board board, int steps) {
-		System.out.println(this.name);
 		board.movePiece(piece, steps);
 	}
 	

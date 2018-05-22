@@ -89,7 +89,6 @@ public class Game extends Observable {
 		setMove(false);
 		isMoveEnd = false;
 		replayCheck = false;
-		System.out.println("-------------------------------- " + currentPlayerName());
 		if (!ended) {
 			if (getBackward()) {
 				this.steps = -newSteps;
@@ -145,9 +144,6 @@ public class Game extends Observable {
 					}
 					
 					waitFor(800);
-					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
-					System.out.println("Dice faces: " + steps);
-					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
 
 					if (hasLadder()) {
 						for (int i = 0; i < getSpecialSteps(); i++) {
@@ -170,7 +166,6 @@ public class Game extends Observable {
 					currentPlayer().movePiece(board, getSpecialSteps());
 
 					if (hasFreeze()) {
-						System.out.println(currentPlayerName() + " Freeze!");
 						setFreeze();
 					}
 
@@ -180,7 +175,6 @@ public class Game extends Observable {
 					notifyObservers();
 
 					if (currentPlayersWins() && !exceed) {
-						System.out.println(currentPlayerName() + "'s win!");
 						end();
 					}
 					if (!hasBackward()) {
@@ -211,7 +205,6 @@ public class Game extends Observable {
 					gameLogic(tmp.get(0).getSteps());
 					tmp = tmp.subList(1, tmp.size());
 					while (!replayCheck) {
-						System.out.print("");
 					}
 				}
 				replayMode = false;
