@@ -6,7 +6,7 @@
 
 ## Download
 
-Download Server JAR file [Click Here](https://github.com/boranorben/SSD_SnakesAndLadders/blob/master/Server.jar)
+Download Server JAR file [Click Here](https://github.com/boranorben/SSD_SnakesAndLadders/blob/master/Server.jar) <br>
 Download Game JAR file [Click Here](https://github.com/boranorben/SSD_SnakesAndLadders/blob/master/SnakesAndLadders.jar)
 
 ## Features
