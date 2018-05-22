@@ -282,7 +282,7 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-					game.gameLogic(101);
+					game.gameLogic(diceFace);
 					if (online) {
 						try {
 							client.sendToServer("move " + diceFace);
@@ -427,7 +427,7 @@ public class GUI implements Observer {
 		default:
 			break;
 		}
-		game.gameLogic(100);
+		game.gameLogic(diceFace);
 		switchPlayer();
 		if (currentPlayerNumber == playerNumber) {
 			die.setEnabled(true);
