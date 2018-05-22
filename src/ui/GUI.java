@@ -29,7 +29,7 @@ public class GUI implements Observer {
 
 	private Game game;
 
-	private JFrame homeFrame, gameFrame, disconnectedFrame, waitingFrame, closingFrame;
+	private JFrame homeFrame, gameFrame, disconnectedFrame, waitingFrame;
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
 			player4_Pin, disconnectedLabel, searchPic, waitingLabel, waitingPic;
 	private List<JLabel> players = new ArrayList<JLabel>();
@@ -48,35 +48,35 @@ public class GUI implements Observer {
 		gameFrame = new JFrame("Snakes and Ladders - GAME");
 		disconnectedFrame = new JFrame("Snakes and Ladders - OPPONENT DISCONNECTED");
 		waitingFrame = new JFrame("Snakes and Ladders - WAITING FOR PLAYERS");
-		closingFrame = new JFrame("Snakes and Ladders - CLOSING ONLINE");
 		initFrame(homeFrame);
 		initFrame(gameFrame);
 		initFrame(disconnectedFrame);
 		initFrame(waitingFrame);
-		initFrame(closingFrame);
 		waitingFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		disconnectedFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.gui = this;
 		initComponent();
 		game.addObserver(this);
 	}
 
 	public void initComponent() {
-		title = new JLabel(new ImageIcon(getClass().getResource("./../images/titlePic.png")));
-		rollResult = new JLabel(new ImageIcon(getClass().getResource("./../images/dice0.png")));
-		boardPic = new JLabel(new ImageIcon(getClass().getResource("./../images/boardPic.jpg")));
-		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
+		
+		title = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/titlePic.png")));
+		rollResult = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/dice0.png")));
+		boardPic = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/boardPic.jpg")));
+		coverPic = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/coverPic.jpg")));
 		status = new JLabel("Waiting for roling the dice...");
 		currentPlayer = new JLabel();
 
 		disconnectedLabel = new JLabel("Opponent disconnected");
 		waitingLabel = new JLabel("Waiting for players");
-		searchPic = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
-		waitingPic = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
+		searchPic = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/searchPic.png")));
+		waitingPic = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("images/searchPic.png")));
 
-		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
-		player2_icon = new ImageIcon(getClass().getResource("./../images/player2.png"));
-		player3_icon = new ImageIcon(getClass().getResource("./../images/player3.png"));
-		player4_icon = new ImageIcon(getClass().getResource("./../images/player4.png"));
+		player1_icon = new ImageIcon(getClass().getClassLoader().getResource("images/player1.png"));
+		player2_icon = new ImageIcon(getClass().getClassLoader().getResource("images/player2.png"));
+		player3_icon = new ImageIcon(getClass().getClassLoader().getResource("images/player3.png"));
+		player4_icon = new ImageIcon(getClass().getClassLoader().getResource("images/player4.png"));
 
 		player1_Pin = new JLabel(player1_icon);
 		player2_Pin = new JLabel(player2_icon);
@@ -98,15 +98,15 @@ public class GUI implements Observer {
 		homeButton = new JButton();
 		cancelButton = new JButton();
 
-		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
-		player3_Button.setIcon(new ImageIcon(getClass().getResource("./../images/3Player.png")));
-		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
-		online_Button.setIcon(new ImageIcon(getClass().getResource("./../images/online.png")));
-		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
-		home_Button.setIcon(new ImageIcon(getClass().getResource("./../images/home_2.png")));
-		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
-		homeButton.setIcon(new ImageIcon(getClass().getResource("./../images/home.png")));
-		cancelButton.setIcon(new ImageIcon(getClass().getResource("./../images/cancel.png")));
+		player2_Button.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/2Player.png")));
+		player3_Button.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/3Player.png")));
+		player4_Button.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/4Player.png")));
+		online_Button.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/online.png")));
+		die.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/die.png")));
+		home_Button.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/home_2.png")));
+		replayButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/replay.png")));
+		homeButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/home.png")));
+		cancelButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/cancel.png")));
 		replayButton.setEnabled(false);
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -246,7 +246,6 @@ public class GUI implements Observer {
 				online = true;
 				connectToServer();
 				homeFrame.setVisible(false);
-				// disconnectedFrame.setVisible(true);
 			}
 		});
 
@@ -261,28 +260,29 @@ public class GUI implements Observer {
 					diceFace = game.currentPlayerRollDice();
 					switch (diceFace) {
 					case 1:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice1.png")));
 						break;
 					case 2:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice2.png")));
 						break;
 					case 3:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice3.png")));
 						break;
 					case 4:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice4.png")));
 						break;
 					case 5:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice5.png")));
 						break;
 					case 6:
-						rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
+						rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice6.png")));
 						break;
 					default:
 						break;
 					}
 					die.setEnabled(false);
 					game.gameLogic(diceFace);
+					switchPlayer();
 					if (online) {
 						try {
 							client.sendToServer("move " + diceFace);
@@ -301,6 +301,10 @@ public class GUI implements Observer {
 				if (online) {
 					try {
 						client.sendToServer("disconnect 0");
+						client.closeConnection();
+						client = null;
+						online = false;
+						currentPlayerNumber = 1;
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -331,6 +335,10 @@ public class GUI implements Observer {
 				homeFrame.setVisible(true);
 				try {
 					client.sendToServer("disconnect 0");
+					client.closeConnection();
+					client = null;
+					online = false;
+					currentPlayerNumber = 1;
 				} catch (IOException e1) {
 				}
 			}
@@ -376,6 +384,8 @@ public class GUI implements Observer {
 		playerNumber = player;
 		if (player != 1) {
 			die.setEnabled(false);
+		} else {
+			die.setEnabled(true);
 		}
 	}
 
@@ -407,33 +417,29 @@ public class GUI implements Observer {
 	public void opponentMove(int diceFace) {
 		switch (diceFace) {
 		case 1:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice1.png")));
 			break;
 		case 2:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice2.png")));
 			break;
 		case 3:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice3.png")));
 			break;
 		case 4:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice4.png")));
 			break;
 		case 5:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice5.png")));
 			break;
 		case 6:
-			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
+			rollResult.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/dice6.png")));
 			break;
 		default:
 			break;
 		}
 		game.gameLogic(diceFace);
 		switchPlayer();
-		if (currentPlayerNumber == playerNumber) {
-			die.setEnabled(true);
-		} else {
-			die.setEnabled(false);
-		}
+		
 	}
 
 	public void setTransparentBackground(JButton button) {
@@ -449,7 +455,7 @@ public class GUI implements Observer {
 	}
 
 	public void setFont(JLabel label, float f) {
-		InputStream is = GUI.class.getResourceAsStream("./../fonts/HoboStd.otf");
+		InputStream is = GUI.class.getClassLoader().getResourceAsStream("fonts/HoboStd.otf");
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
 			Font sizedFont = font.deriveFont(f);
@@ -549,6 +555,12 @@ public class GUI implements Observer {
 				if (!game.isMoveEnd()) {
 					int pos = currentPosition + diceFace;
 					status.setText(currentPlayerName + " goes to " + pos);
+				} else {
+					if (currentPlayerNumber == playerNumber) {
+						die.setEnabled(true);
+					} else {
+						die.setEnabled(false);
+					}
 				}
 			}
 		}

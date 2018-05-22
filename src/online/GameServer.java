@@ -47,12 +47,10 @@ public class GameServer extends AbstractServer {
 			}
 			clientRoom = findClientRoom(client);
 			if (clientRoom == null) {
-				System.out.println("1 in");
 				GameRoom newRoom = new GameRoom();
 				newRoom.add(client);
 				rooms.add(newRoom);
 				try {
-					System.out.println("sending");
 					client.sendToClient("wait 1");
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -103,15 +101,19 @@ public class GameServer extends AbstractServer {
 				try {
 					if (clientRoom.getC1() != client) {
 						clientRoom.getC1().sendToClient(type + " " + text);
+						clientRoom.getC1().close();
 					}
 					if (clientRoom.getC2() != client) {
 						clientRoom.getC2().sendToClient(type + " " + text);
+						clientRoom.getC2().close();
 					}
 					if (clientRoom.getC3() != client) {
 						clientRoom.getC3().sendToClient(type + " " + text);
+						clientRoom.getC3().close();
 					}
 					if (clientRoom.getC4() != client) {
 						clientRoom.getC4().sendToClient(type + " " + text);
+						clientRoom.getC4().close();
 					}
 				} catch (IOException e) {
 					e.printStackTrace();

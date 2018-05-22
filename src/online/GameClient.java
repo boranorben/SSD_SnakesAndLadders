@@ -9,13 +9,11 @@ public class GameClient extends AbstractClient {
 
 	public GameClient(String host, int port, GUI gui) {
 		super(host, port);
-		System.out.println("hello");
 		this.gui = gui;
 	}
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		System.out.println("recieved");
 		String[] message = ((String) msg).split(" ");
 		String type = message[0];
 		int text = Integer.parseInt(message[1]);
