@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -20,35 +21,43 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import game.Game;
+import online.GameClient;
 
 public class GUI implements Observer {
 
 	private Game game;
 
-	private JFrame homeFrame, gameFrame, onlineFrame, searchFrame, waitingFrame;
+	private JFrame homeFrame, gameFrame, disconnectedFrame, waitingFrame, closingFrame;
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
-			player4_Pin, searchLabel, searchPic, waitingLabel, waitingPic;
+			player4_Pin, disconnectedLabel, searchPic, waitingLabel, waitingPic;
 	private List<JLabel> players = new ArrayList<JLabel>();
-	private JButton player2_Button, player3_Button, player4_Button ,online_Button, die, restartButton, replayButton,
-			serachButton, cancelButton;
+	private JButton player2_Button, player3_Button, player4_Button, online_Button, die, restartButton, replayButton,
+			homeButton, cancelButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
 	private JTextField portField;
 	private int diceFace = 0;
+	private int currentPlayerNumber = 1, playerNumber;
+	private boolean online = false;
+	private GameClient client;
+	private GUI gui = this;
 
 	public GUI(Game game) {
 		this.game = game;
 		homeFrame = new JFrame("Snakes and Ladders - HOME");
 		gameFrame = new JFrame("Snakes and Ladders - GAME");
-		onlineFrame = new JFrame("Snakes and Ladders - ONLINE");
-		searchFrame = new JFrame("Snakes and Ladders - SEARCH FOR ONLINE");
+		disconnectedFrame = new JFrame("Snakes and Ladders - OPPONENT DISCONNECTED");
 		waitingFrame = new JFrame("Snakes and Ladders - WAITING FOR PLAYERS");
+		closingFrame = new JFrame("Snakes and Ladders - CLOSING ONLINE");
 		initFrame(homeFrame);
 		initFrame(gameFrame);
-		initFrame(searchFrame);
+		initFrame(disconnectedFrame);
 		initFrame(waitingFrame);
-		initFrame(onlineFrame);
+		initFrame(closingFrame);
+		waitingFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
 		initComponent();
 		game.addObserver(this);
 	}
@@ -60,10 +69,10 @@ public class GUI implements Observer {
 		coverPic = new JLabel(new ImageIcon(getClass().getResource("./../images/coverPic.jpg")));
 		status = new JLabel("Waiting for roling the dice...");
 		currentPlayer = new JLabel();
-		
-		searchLabel = new JLabel("Enter port number");
+
+		disconnectedLabel = new JLabel("Opponent disconnected");
 		waitingLabel = new JLabel("Waiting for players");
-		searchPic  = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
+		searchPic = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
 		waitingPic = new JLabel(new ImageIcon(getClass().getResource("./../images/searchPic.png")));
 
 		player1_icon = new ImageIcon(getClass().getResource("./../images/player1.png"));
@@ -78,7 +87,7 @@ public class GUI implements Observer {
 
 		setFont(status, 12f);
 		setFont(currentPlayer, 12f);
-		setFont(searchLabel, 28f);
+		setFont(disconnectedLabel, 28f);
 		setFont(waitingLabel, 28f);
 
 		player2_Button = new JButton();
@@ -88,7 +97,7 @@ public class GUI implements Observer {
 		die = new JButton();
 		restartButton = new JButton();
 		replayButton = new JButton();
-		serachButton = new JButton();
+		homeButton = new JButton();
 		cancelButton = new JButton();
 
 		player2_Button.setIcon(new ImageIcon(getClass().getResource("./../images/2Player.png")));
@@ -98,12 +107,10 @@ public class GUI implements Observer {
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
 		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
-		serachButton.setIcon(new ImageIcon(getClass().getResource("./../images/search.png")));
+		homeButton.setIcon(new ImageIcon(getClass().getResource("./../images/home.png")));
 		cancelButton.setIcon(new ImageIcon(getClass().getResource("./../images/cancel.png")));
 		replayButton.setEnabled(false);
-		
-		portField = new JTextField("                                       ");
-		
+
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
@@ -114,7 +121,7 @@ public class GUI implements Observer {
 		setTransparentBackground(die);
 		setTransparentBackground(restartButton);
 		setTransparentBackground(replayButton);
-		setTransparentBackground(serachButton);
+		setTransparentBackground(homeButton);
 		setTransparentBackground(cancelButton);
 
 		homeFrame.setContentPane(coverPic);
@@ -123,12 +130,12 @@ public class GUI implements Observer {
 		homeFrame.add(player3_Button, gbc);
 		homeFrame.add(player4_Button, gbc);
 		homeFrame.add(online_Button, gbc);
-		
+
 		JPanel managerPanel = new JPanel();
 		managerPanel.setLayout(new BoxLayout(managerPanel, BoxLayout.X_AXIS));
 		managerPanel.add(restartButton);
 		managerPanel.add(replayButton);
-		
+
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridBagLayout());
 		topPanel.add(title, gbc);
@@ -163,31 +170,48 @@ public class GUI implements Observer {
 		gameFrame.add(topPanel, BorderLayout.NORTH);
 		gameFrame.add(boardPanel, BorderLayout.CENTER);
 		gameFrame.add(controllerPanel, BorderLayout.SOUTH);
-		
-		onlineFrame = gameFrame;
-		
-		onlineFrame.pack();
+
+		gameFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		gameFrame.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			 public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        if (JOptionPane.showConfirmDialog(gameFrame, 
+		            "Are you sure to exit the game?", "Really Closing?", 
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+		        	if(online == true) {
+		        		try {
+							client.sendToServer("disconnect 0");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+		        	}
+		            System.exit(0);
+		        }
+		    }
+			
+		});
+
 		gameFrame.pack();
 		homeFrame.pack();
-		
+
 		gbc.gridheight = GridBagConstraints.CENTER;
-		searchFrame.setContentPane(searchPic);
-		searchFrame.setLayout(new GridBagLayout());
-		searchFrame.add(searchLabel, gbc);
-		searchFrame.add(portField, gbc);
-		searchFrame.add(serachButton, gbc);
-		
+		disconnectedFrame.setContentPane(searchPic);
+		disconnectedFrame.setLayout(new GridBagLayout());
+		disconnectedFrame.add(disconnectedLabel, gbc);
+		disconnectedFrame.add(homeButton, gbc);
+
 		waitingFrame.setContentPane(waitingPic);
 		waitingFrame.setLayout(new GridBagLayout());
 		waitingFrame.add(waitingLabel, gbc);
 		waitingFrame.add(cancelButton, gbc);
-		
+
 		endFrame(homeFrame);
 		endFrame(gameFrame);
-		endFrame(searchFrame);
+		endFrame(disconnectedFrame);
 		endFrame(waitingFrame);
-		endFrame(onlineFrame);
-		
+
 		player2_Button.addActionListener(new ActionListener() {
 
 			@Override
@@ -221,11 +245,17 @@ public class GUI implements Observer {
 			}
 		});
 		
+		
+		
 		online_Button.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				searchFrame.setVisible(true);
+				client = new GameClient("127.0.0.1", 5000, gui);
+				online = true;
+				connectToServer();
+				homeFrame.setVisible(false);
+				// disconnectedFrame.setVisible(true);
 			}
 		});
 
@@ -262,6 +292,13 @@ public class GUI implements Observer {
 					}
 					die.setEnabled(false);
 					game.gameLogic(diceFace);
+					if (online) {
+						try {
+							client.sendToServer("move " + diceFace);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
 				}
 			}
 		});
@@ -286,32 +323,42 @@ public class GUI implements Observer {
 				game.showReplay();
 			}
 		});
-//		gameFrame.setVisible(false);
-		
-		serachButton.addActionListener(new ActionListener() {
-			
+		// gameFrame.setVisible(false);
+
+		homeButton.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				waitingFrame.setVisible(true);
-				searchFrame.setVisible(false);
+				disconnectedFrame.setVisible(false);
+				homeFrame.setVisible(true);
+				try {
+					client.sendToServer("disconnect 0");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
-		
+
 		cancelButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				searchFrame.setVisible(true);
 				waitingFrame.setVisible(false);
+				homeFrame.setVisible(true);
+				try {
+					client.sendToServer("cancel 0");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
-	
+
 	public void initFrame(JFrame frame) {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
+
 	public void endFrame(JFrame frame) {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -320,11 +367,82 @@ public class GUI implements Observer {
 	public void setVisible() {
 		homeFrame.setVisible(true);
 	}
-	
-	public void onlineMode() {
+
+	public void startGame(int player) {
 		homeFrame.setVisible(false);
-		onlineFrame.setVisible(true);
+		gameFrame.setVisible(true);
+		waitingFrame.setVisible(false);
 		game.initPlayers(4);
+		players.add(player1_Pin);
+		players.add(player2_Pin);
+		players.add(player3_Pin);
+		players.add(player4_Pin);
+		playerNumber = player;
+		if (player != 1) {
+			die.setEnabled(false);
+		}
+	}
+
+	public void opponentDisconnected() {
+		disconnectedFrame.setVisible(true);
+		gameFrame.setVisible(false);
+	}
+	
+	public void waitForPlayers() {
+		waitingFrame.setVisible(true);
+	}
+
+	public void switchPlayer() {
+		if (currentPlayerNumber != 4) {
+			currentPlayerNumber++;
+		} else {
+			currentPlayerNumber = 1;
+		}
+	}
+
+	public void connectToServer() {
+		try {
+			System.out.println(1);
+			client.openConnection();
+			System.out.println(2);
+			client.sendToServer("connect 0");
+			System.out.println("success");
+		} catch (IOException e) {
+			System.out.println("fail");
+			e.printStackTrace();
+		}
+	}
+
+	public void opponentMove(int diceFace) {
+		switch (diceFace) {
+		case 1:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice1.png")));
+			break;
+		case 2:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice2.png")));
+			break;
+		case 3:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice3.png")));
+			break;
+		case 4:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice4.png")));
+			break;
+		case 5:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice5.png")));
+			break;
+		case 6:
+			rollResult.setIcon(new ImageIcon(getClass().getResource("./../images/dice6.png")));
+			break;
+		default:
+			break;
+		}
+		game.gameLogic(diceFace);
+		switchPlayer();
+		if (currentPlayerNumber == playerNumber) {
+			die.setEnabled(true);
+		} else {
+			die.setEnabled(false);
+		}
 	}
 
 	public void setTransparentBackground(JButton button) {
@@ -451,7 +569,9 @@ public class GUI implements Observer {
 	public void move(int initialPos) {
 		JLabel current = getPlayerPin();
 		if (game.isMoveEnd()) {
-			die.setEnabled(true);
+			if (online == false) {
+				die.setEnabled(true);
+			}
 		} else {
 			if (game.getBackward()) {
 				moveBackwards(initialPos, current);
