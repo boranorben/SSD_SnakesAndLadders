@@ -171,24 +171,22 @@ public class GUI implements Observer {
 
 		gameFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		gameFrame.addWindowListener(new WindowAdapter() {
-			
+
 			@Override
-			 public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        if (JOptionPane.showConfirmDialog(gameFrame, 
-		            "Are you sure to exit the game?", "Really Closing?", 
-		            JOptionPane.YES_NO_OPTION,
-		            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-		        	if(online == true) {
-		        		try {
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(gameFrame, "Are you sure to exit the game?", "Really Closing?",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					if (online == true) {
+						try {
 							client.sendToServer("disconnect 0");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-		        	}
-		            System.exit(0);
-		        }
-		    }
-			
+					}
+					System.exit(0);
+				}
+			}
+
 		});
 
 		gbc.gridheight = GridBagConstraints.CENTER;
@@ -239,7 +237,7 @@ public class GUI implements Observer {
 				players.add(player4_Pin);
 			}
 		});
-		
+
 		online_Button.addActionListener(new ActionListener() {
 
 			@Override
@@ -300,7 +298,7 @@ public class GUI implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(online) {
+				if (online) {
 					try {
 						client.sendToServer("disconnect 0");
 					} catch (IOException e1) {
@@ -334,7 +332,6 @@ public class GUI implements Observer {
 				try {
 					client.sendToServer("disconnect 0");
 				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
 			}
 		});
@@ -348,7 +345,6 @@ public class GUI implements Observer {
 				try {
 					client.sendToServer("cancel 0");
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		});
@@ -387,7 +383,7 @@ public class GUI implements Observer {
 		disconnectedFrame.setVisible(true);
 		gameFrame.setVisible(false);
 	}
-	
+
 	public void waitForPlayers() {
 		waitingFrame.setVisible(true);
 	}
@@ -402,14 +398,9 @@ public class GUI implements Observer {
 
 	public void connectToServer() {
 		try {
-			System.out.println(1);
 			client.openConnection();
-			System.out.println(2);
 			client.sendToServer("connect 0");
-			System.out.println("success");
 		} catch (IOException e) {
-			System.out.println("fail");
-			e.printStackTrace();
 		}
 	}
 
@@ -436,7 +427,7 @@ public class GUI implements Observer {
 		default:
 			break;
 		}
-		game.gameLogic(diceFace);
+		game.gameLogic(100);
 		switchPlayer();
 		if (currentPlayerNumber == playerNumber) {
 			die.setEnabled(true);
@@ -527,9 +518,16 @@ public class GUI implements Observer {
 		String currentPlayerName = game.currentPlayerName();
 		int currentPosition = game.currentPlayerPosition();
 		if (game.currentPlayersWins()) {
-			status.setText(currentPlayerName + "WINS!");
+			status.setText(currentPlayerName + " WINS!");
 			replayButton.setEnabled(true);
-		} else {	
+			die.setEnabled(false);
+			if (online) {
+				try {
+					client.sendToServer("end 0");
+				} catch (IOException e) {
+				}
+			}
+		} else {
 			if (game.currentPlayer().getFreeze()) {
 				status.setText(currentPlayerName + "'s still FREEZE!");
 			}
