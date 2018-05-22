@@ -25,6 +25,7 @@ public class Game extends Observable {
 	private boolean hasMove = false;
 	private boolean isMoveEnd = false;
 	private boolean replayCheck = false;
+	private boolean exceed = false;
 
 	private List<Replay> replay = new ArrayList<Replay>();
 	private boolean replayMode;
@@ -97,11 +98,18 @@ public class Game extends Observable {
 			}
 			initialPosition = currentPlayerPosition();
 			moveThread = new Thread(new Runnable() {
+				int moveSteps = newSteps;
 
 				@Override
 				public void run() {
 					if (!replayMode) {
 						replay.add(new Replay(currentPlayer(), newSteps));
+					}
+					int returnSteps = 0;
+					if((initialPosition + newSteps) > 100) {
+						exceed = true;
+						returnSteps = newSteps - (100 - initialPosition);
+						moveSteps = newSteps - returnSteps;
 					}
 					if (getBackward()) {
 						for (int i = steps; i < 0; i++) {
@@ -112,14 +120,30 @@ public class Game extends Observable {
 						}
 						backwards = false;
 					} else {
-						for (int i = 0; i < newSteps; i++) {
+						for (int i = 0; i < moveSteps; i++) {
 							initialPosition++;
 							setChanged();
 							notifyObservers();
 							waitFor(500);
 						}
 					}
-					currentPlayer().movePiece(board, steps);
+					
+					if(exceed) {
+						currentPlayer().movePiece(board, moveSteps);
+						backwards = true;
+						for (int i = -returnSteps; i < 0; i++) {
+							initialPosition--;
+							setChanged();
+							notifyObservers();
+							waitFor(500);
+						}
+						backwards = false;
+						currentPlayer().movePiece(board, -returnSteps);
+						exceed = false;
+					} else {
+						currentPlayer().movePiece(board, steps);
+					}
+					
 					waitFor(800);
 					System.out.println(currentPlayerName() + "'s positon: " + currentPlayerPosition());
 					System.out.println("Dice faces: " + steps);
@@ -155,7 +179,7 @@ public class Game extends Observable {
 					setChanged();
 					notifyObservers();
 
-					if (currentPlayersWins()) {
+					if (currentPlayersWins() && !exceed) {
 						System.out.println(currentPlayerName() + "'s win!");
 						end();
 					}
@@ -274,7 +298,7 @@ public class Game extends Observable {
 	}
 
 	public boolean currentPlayersWins() {
-		return board.pieceIsAtGoal(currentPlayer().getPiece());
+		return board.pieceIsAtGoal(currentPlayer().getPiece()) && !exceed;
 	}
 
 	public String currentPlayerName() {

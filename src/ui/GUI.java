@@ -43,6 +43,7 @@ public class GUI implements Observer {
 	private boolean online = false;
 	private GameClient client;
 	private GUI gui = this;
+	int count = 0;
 
 	public GUI(Game game) {
 		this.game = game;
@@ -291,7 +292,15 @@ public class GUI implements Observer {
 						break;
 					}
 					die.setEnabled(false);
-					game.gameLogic(diceFace);
+					
+					if(count == 0) {
+						game.gameLogic(97);
+					} else if(count == 2){
+						game.gameLogic(7);
+					} else {
+						game.gameLogic(diceFace);
+					}
+					count++;
 					if (online) {
 						try {
 							client.sendToServer("move " + diceFace);
@@ -529,7 +538,7 @@ public class GUI implements Observer {
 		if (game.currentPlayersWins()) {
 			status.setText(currentPlayerName + "WINS!");
 			replayButton.setEnabled(true);
-		} else {
+		} else {	
 			if (game.currentPlayer().getFreeze()) {
 				status.setText(currentPlayerName + "'s still FREEZE!");
 			}
