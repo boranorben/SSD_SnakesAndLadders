@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import game.Game;
@@ -34,10 +33,9 @@ public class GUI implements Observer {
 	private JLabel title, rollResult, boardPic, coverPic, status, currentPlayer, player1_Pin, player2_Pin, player3_Pin,
 			player4_Pin, disconnectedLabel, searchPic, waitingLabel, waitingPic;
 	private List<JLabel> players = new ArrayList<JLabel>();
-	private JButton player2_Button, player3_Button, player4_Button, online_Button, die, restartButton, replayButton,
+	private JButton player2_Button, player3_Button, player4_Button, online_Button, die, home_Button, replayButton,
 			homeButton, cancelButton;
 	private ImageIcon player1_icon, player2_icon, player3_icon, player4_icon;
-	private JTextField portField;
 	private int diceFace = 0;
 	private int currentPlayerNumber = 1, playerNumber;
 	private boolean online = false;
@@ -96,7 +94,7 @@ public class GUI implements Observer {
 		player4_Button = new JButton();
 		online_Button = new JButton();
 		die = new JButton();
-		restartButton = new JButton();
+		home_Button = new JButton();
 		replayButton = new JButton();
 		homeButton = new JButton();
 		cancelButton = new JButton();
@@ -106,7 +104,7 @@ public class GUI implements Observer {
 		player4_Button.setIcon(new ImageIcon(getClass().getResource("./../images/4Player.png")));
 		online_Button.setIcon(new ImageIcon(getClass().getResource("./../images/online.png")));
 		die.setIcon(new ImageIcon(getClass().getResource("./../images/die.png")));
-		restartButton.setIcon(new ImageIcon(getClass().getResource("./../images/restart.png")));
+		home_Button.setIcon(new ImageIcon(getClass().getResource("./../images/home_2.png")));
 		replayButton.setIcon(new ImageIcon(getClass().getResource("./../images/replay.png")));
 		homeButton.setIcon(new ImageIcon(getClass().getResource("./../images/home.png")));
 		cancelButton.setIcon(new ImageIcon(getClass().getResource("./../images/cancel.png")));
@@ -120,7 +118,7 @@ public class GUI implements Observer {
 		setTransparentBackground(player4_Button);
 		setTransparentBackground(online_Button);
 		setTransparentBackground(die);
-		setTransparentBackground(restartButton);
+		setTransparentBackground(home_Button);
 		setTransparentBackground(replayButton);
 		setTransparentBackground(homeButton);
 		setTransparentBackground(cancelButton);
@@ -134,7 +132,7 @@ public class GUI implements Observer {
 
 		JPanel managerPanel = new JPanel();
 		managerPanel.setLayout(new BoxLayout(managerPanel, BoxLayout.X_AXIS));
-		managerPanel.add(restartButton);
+		managerPanel.add(home_Button);
 		managerPanel.add(replayButton);
 
 		JPanel topPanel = new JPanel();
@@ -194,9 +192,6 @@ public class GUI implements Observer {
 			
 		});
 
-		gameFrame.pack();
-		homeFrame.pack();
-
 		gbc.gridheight = GridBagConstraints.CENTER;
 		disconnectedFrame.setContentPane(searchPic);
 		disconnectedFrame.setLayout(new GridBagLayout());
@@ -245,8 +240,6 @@ public class GUI implements Observer {
 				players.add(player4_Pin);
 			}
 		});
-		
-		
 		
 		online_Button.addActionListener(new ActionListener() {
 
@@ -312,7 +305,7 @@ public class GUI implements Observer {
 			}
 		});
 
-		restartButton.addActionListener(new ActionListener() {
+		home_Button.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
